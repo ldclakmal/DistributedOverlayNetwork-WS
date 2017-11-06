@@ -14,7 +14,7 @@ import java.util.*;
 
 public class BootstrapNode {
 
-    public static void main(String[] args) {
+    public static void m(String[] args) {
 
         HashMap<String, String> paramMap = new HashMap<>();
 
