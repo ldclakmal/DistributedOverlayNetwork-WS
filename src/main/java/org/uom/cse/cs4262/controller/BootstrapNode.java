@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
+import org.uom.cse.cs4262.ui.NodeGUI;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -62,6 +63,11 @@ public class BootstrapNode extends SpringBootServletInitializer {
                 e.printStackTrace();
             }
         }
+
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            NodeGUI nodeGUI = new NodeGUI(nodeOpsWS);
+            nodeGUI.start();
+        });
 
         SpringApplication.run(BootstrapNode.class, args);
     }

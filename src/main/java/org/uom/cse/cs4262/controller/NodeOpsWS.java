@@ -1,5 +1,6 @@
 package org.uom.cse.cs4262.controller;
 
+import com.google.gson.Gson;
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
 import org.uom.cse.cs4262.api.Node;
@@ -9,11 +10,8 @@ import org.uom.cse.cs4262.api.message.request.*;
 import org.uom.cse.cs4262.api.message.response.*;
 import org.uom.cse.cs4262.feature.Parser;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.io.*;
+import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -128,11 +126,14 @@ public class NodeOpsWS implements NodeOps, Runnable {
     }
 
     @Override
-    public void leave(Credential neighbourCredential) {
+    public void leave() {
+
         LeaveRequest leaveRequest = new LeaveRequest(node.getCredential());
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
         try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(neighbourCredential.getIp()), neighbourCredential.getPort()));
+            for (Credential neighbourCredential : node.getRoutingTable()) {
+                socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(neighbourCredential.getIp()), neighbourCredential.getPort()));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,12 +152,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
-        String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
-        try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(sendCredentials.getIp()), sendCredentials.getPort()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
+        callAPI(sendCredentials.getIp(), sendCredentials.getPort(), "search", "GET", new Gson().toJson(searchRequest));
+        System.out.println("search called");
     }
 
     @Override
@@ -300,17 +298,6 @@ public class NodeOpsWS implements NodeOps, Runnable {
     }
 
     @Override
-    public void printRoutingTable(List<Credential> routingTable) {
-        System.out.println("Routing table updated as :");
-        System.out.println("--------------------------------------------------------");
-        System.out.println("IP \t \t \t PORT");
-        for (Credential credential : routingTable) {
-            System.out.println(credential.getIp() + "\t" + credential.getPort());
-        }
-        System.out.println("--------------------------------------------------------");
-    }
-
-    @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
         System.out.println("\nTriggered search request for " + searchRequest.getFileName() + "\n");
         List<String> searchResult = checkForFiles(searchRequest.getFileName(), node.getFileList());
@@ -330,6 +317,76 @@ public class NodeOpsWS implements NodeOps, Runnable {
             for (Credential credential : node.getRoutingTable()) {
                 search(searchRequest, credential);
                 System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+            }
+        }
+    }
+
+    @Override
+    public void printRoutingTable(List<Credential> routingTable) {
+        System.out.println("Routing table updated as :");
+        System.out.println("--------------------------------------------------------");
+        System.out.println("IP \t \t \t PORT");
+        for (Credential credential : routingTable) {
+            System.out.println(credential.getIp() + "\t" + credential.getPort());
+        }
+        System.out.println("--------------------------------------------------------");
+    }
+
+
+    @Override
+    public String callAPI(String ip, int port, String pattern, String method, String body) {
+        InputStreamReader inputStreamReader = null;
+        OutputStream outputStream = null;
+        BufferedReader bufferedReader = null;
+
+        try {
+            URL url = new URL("http://" + ip + File.pathSeparator + port + File.separator + pattern);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod(method);
+
+            outputStream = conn.getOutputStream();
+            outputStream.write(body.getBytes());
+            outputStream.flush();
+
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+            }
+
+            inputStreamReader = new InputStreamReader((conn.getInputStream()));
+            bufferedReader = new BufferedReader(inputStreamReader);
+
+            String read;
+            String response = "";
+            while ((read = bufferedReader.readLine()) != null) {
+                response += read;
+            }
+
+            conn.disconnect();
+            return response;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (inputStreamReader != null) {
+                try {
+                    inputStreamReader.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
