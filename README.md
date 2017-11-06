@@ -33,7 +33,7 @@ $ mvn clean install
 #### Example
 
 ```
-$ java -jar idstack-cs4262.jar -b 192.168.1.1 -i 10.10.0.1 -p 44444 -u node1
+$ java -jar node.jar -b 192.168.1.1 -i 10.10.0.1 -p 44444 -u node1
 ```
 
 ### Notes

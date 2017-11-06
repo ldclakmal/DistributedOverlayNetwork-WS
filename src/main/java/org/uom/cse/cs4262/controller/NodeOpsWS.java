@@ -1,4 +1,4 @@
-package org.uom.cse.cs4262.controller.udp;
+package org.uom.cse.cs4262.controller;
 
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
@@ -24,14 +24,15 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 
-public class NodeOpsUDP implements NodeOps, Runnable {
+public class NodeOpsWS implements NodeOps, Runnable {
 
     private Node node;
     private Credential bootstrapServerCredential;
     private DatagramSocket socket;
+    private Thread nodeThread;
     private boolean regOk = false;
 
-    public NodeOpsUDP(Credential bootstrapServerCredential, Credential nodeCredential) {
+    public NodeOpsWS(Credential bootstrapServerCredential, Credential nodeCredential) {
         this.bootstrapServerCredential = bootstrapServerCredential;
 
         this.node = new Node();
@@ -47,9 +48,13 @@ public class NodeOpsUDP implements NodeOps, Runnable {
         return node;
     }
 
+    public Thread getNodeThread() {
+        return nodeThread;
+    }
+
     @Override
     public void run() {
-        System.out.println("Server " + this.node.getCredential().getUsername() + " created at " + this.node.getCredential().getPort() + ". Waiting for incoming data...");
+        System.out.println("Server " + this.node.getCredential().getUsername() + " created at " + this.node.getCredential().getPort() + ". Waiting for incoming data...\n");
         byte buffer[];
         DatagramPacket datagramPacket;
         while (true) {
@@ -74,7 +79,8 @@ public class NodeOpsUDP implements NodeOps, Runnable {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        new Thread(this).start();
+        nodeThread = new Thread(this);
+        nodeThread.start();
     }
 
     @Override
@@ -199,7 +205,7 @@ public class NodeOpsUDP implements NodeOps, Runnable {
         fileList.add("Hacking_for_Dummies");
         Collections.shuffle(fileList);
         List<String> subFileList = fileList.subList(0, 5);
-        System.out.println("File List : " + Arrays.toString(subFileList.toArray()));
+        System.out.println("File List : " + Arrays.toString(subFileList.toArray()) + "\n");
         return subFileList;
     }
 
@@ -208,19 +214,19 @@ public class NodeOpsUDP implements NodeOps, Runnable {
         if (response instanceof RegisterResponse) {
             RegisterResponse registerResponse = (RegisterResponse) response;
             if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_ALREADY_REGISTERED) {
-                System.out.println("Already registered at Bootstrap with same username");
+                System.out.println("Already registered at Bootstrap with same username\n");
                 Credential credential = node.getCredential();
                 credential.setUsername(UUID.randomUUID().toString());
                 node.setCredential(credential);
                 register();
             } else if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_DUPLICATE_IP) {
-                System.out.println("Already registered at Bootstrap with same port");
+                System.out.println("Already registered at Bootstrap with same port\n");
                 Credential credential = node.getCredential();
                 credential.setPort(credential.getPort() + 1);
                 node.setCredential(credential);
                 register();
             } else if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_CANNOT_REGISTER) {
-                System.out.printf("Can’t register. Bootstrap server full. Try again later");
+                System.out.printf("Can’t register. Bootstrap server full. Try again later\n");
             } else if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_COMMAND) {
                 System.out.println("Error in command");
             } else {
@@ -249,9 +255,9 @@ public class NodeOpsUDP implements NodeOps, Runnable {
         } else if (response instanceof SearchResponse) {
             SearchResponse searchResponse = (SearchResponse) response;
             if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_NODE_UNREACHABLE) {
-                System.out.println("Failure due to node unreachable");
+                System.out.println("Failure due to node unreachable\n");
             } else if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_OTHER) {
-                System.out.println("Some other error");
+                System.out.println("Some other error\n");
             } else {
                 System.out.println("--------------------------------------------------------");
                 System.out.println(searchResponse.toString());
@@ -306,24 +312,24 @@ public class NodeOpsUDP implements NodeOps, Runnable {
 
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
-        System.out.println("\nTriggered search request for " + searchRequest.getFileName());
+        System.out.println("\nTriggered search request for " + searchRequest.getFileName() + "\n");
         List<String> searchResult = checkForFiles(searchRequest.getFileName(), node.getFileList());
         if (!searchResult.isEmpty()) {
-            System.out.println("File is available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort());
+            System.out.println("File is available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
             SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), searchRequest.getCredential(), searchRequest.getHops(), searchResult);
             if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
                 System.out.println(searchResponse.toString());
             } else {
-                System.out.println("Send SEARCHOK response message");
+                System.out.println("Send SEARCHOK response message\n");
                 searchOk(searchResponse);
             }
 
         } else {
-            System.out.println("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort());
+            System.out.println("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
             searchRequest.setHops(searchRequest.incHops());
             for (Credential credential : node.getRoutingTable()) {
                 search(searchRequest, credential);
-                System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort());
+                System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
             }
         }
     }

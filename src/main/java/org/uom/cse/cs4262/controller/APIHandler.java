@@ -1,4 +1,4 @@
-package org.uom.cse.cs4262.controller.ws;
+package org.uom.cse.cs4262.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
