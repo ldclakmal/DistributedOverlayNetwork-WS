@@ -40,7 +40,9 @@ public interface NodeOps {
 
     boolean isRegOk();
 
-    List<String> checkForFiles(String fileName, List<String> fileList);
+    List<String> checkFilesInFileList(String fileName, List<String> fileList);
+
+    List<StatRecord> checkFilesInStatTable(String fileName, List<StatRecord> statTable);
 
     void triggerSearchRequest(SearchRequest searchRequest);
 

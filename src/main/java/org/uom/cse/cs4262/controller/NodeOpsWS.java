@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class NodeOpsWS implements NodeOps, Runnable {
 
     private Node node;
-    private StatRecord statRecord;
     private Credential bootstrapServerCredential;
     private DatagramSocket socket;
     private Thread nodeThread;
@@ -227,7 +226,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 System.out.println("Error in command");
             } else {
                 List<Credential> credentialList = registerResponse.getCredentials();
-                ArrayList<Credential> routingTable = new ArrayList();
+                List<Credential> routingTable = new ArrayList();
                 for (Credential credential : credentialList) {
                     routingTable.add(credential);
                 }
@@ -290,15 +289,27 @@ public class NodeOpsWS implements NodeOps, Runnable {
     }
 
     @Override
-    public List<String> checkForFiles(String fileName, List<String> fileList) {
+    public List<String> checkFilesInFileList(String fileName, List<String> fileList) {
         Pattern pattern = Pattern.compile(fileName);
         return fileList.stream().filter(pattern.asPredicate()).collect(Collectors.toList());
     }
 
     @Override
+    public List<StatRecord> checkFilesInStatTable(String fileName, List<StatRecord> statTable) {
+        Pattern pattern = Pattern.compile(fileName);
+        List<StatRecord> StatTableSearchResult = new ArrayList();
+        for (StatRecord statRecord: statTable){
+            if (pattern.matcher(statRecord.getSearchQuery()).find()) {
+                StatTableSearchResult.add(statRecord);
+            }
+        }
+        return StatTableSearchResult;
+    }
+
+    @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
         System.out.println("\nTriggered search request for " + searchRequest.getFileName() + "\n");
-        List<String> searchResult = checkForFiles(searchRequest.getFileName(), node.getFileList());
+        List<String> searchResult = checkFilesInFileList(searchRequest.getFileName(), node.getFileList());
         if (!searchResult.isEmpty()) {
             System.out.println("File is available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
             SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), searchRequest.getCredential(), searchRequest.getHops(), searchResult);
@@ -312,6 +323,15 @@ public class NodeOpsWS implements NodeOps, Runnable {
         } else {
             System.out.println("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
             searchRequest.setHops(searchRequest.incHops());
+            List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
+            // Send search request to stat table members
+            for (StatRecord statRecord : StatTableSearchResult) {
+                Credential credential = statRecord.getServedNode();
+                search(searchRequest, credential);
+                System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+            }
+            //TODO: Wait and see for stat members rather flooding whole routing table
+            // Send search request to routing table members
             for (Credential credential : node.getRoutingTable()) {
                 search(searchRequest, credential);
                 System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
