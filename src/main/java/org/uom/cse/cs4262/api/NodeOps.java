@@ -1,6 +1,7 @@
 package org.uom.cse.cs4262.api;
 
 import org.uom.cse.cs4262.api.message.Message;
+import org.uom.cse.cs4262.api.message.request.JoinRequest;
 import org.uom.cse.cs4262.api.message.request.LeaveRequest;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.api.message.response.SearchResponse;
@@ -28,6 +29,8 @@ public interface NodeOps {
     void leave();
 
     void removeMe(LeaveRequest leaveRequest);
+
+    void joinMe(JoinRequest joinRequest);
 
 //    void leaveOk(Credential senderCredential);
 

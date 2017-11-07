@@ -100,6 +100,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    /**
+     * @param neighbourCredential Called when I'm 'JOIN'-ing
+     */
     // done
     @Override
     public void join(Credential neighbourCredential) {
@@ -116,6 +119,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
         printRoutingTable(node.getRoutingTable());
     }
 
+    /**
+     * @param joinRequest Called when I'm listening and someone else sends me a 'join'
+     */
+    @Override
+    public void joinMe(JoinRequest joinRequest) {
+        node.getRoutingTable().add(joinRequest.getCredential());
+        System.out.println(joinRequest.getCredential().getUsername() + " sent me a JOIN");
+        printRoutingTable(node.getRoutingTable());
+    }
+
 //    @Override
 //    public void joinOk(Credential senderCredential) {
 //        JoinResponse joinResponse = new JoinResponse(0, node.getCredential());
@@ -128,6 +141,11 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //    }
 
     // done
+
+
+    /**
+     * Called when I'm 'LEAVE'-ing
+     */
     @Override
     public void leave() {
         LeaveRequest leaveRequest = new LeaveRequest(node.getCredential());
@@ -140,17 +158,19 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    /**
+     * @param leaveRequest Called when I amd listening and someone else sends me a 'leave'
+     */
     @Override
     public void removeMe(LeaveRequest leaveRequest) {
         //check my routing table to see if leaveRequest exist
         for (Credential credential : node.getRoutingTable()) {
             if (credential.equals(leaveRequest.getCredential())) {
                 node.getRoutingTable().remove(credential);
-                System.out.println("Removed");
                 break;
             }
         }
-        System.out.println("my routing table");
+        System.out.println(leaveRequest.getCredential().getUsername() + " sent me a LEAVE");
         printRoutingTable(node.getRoutingTable());
     }
 
