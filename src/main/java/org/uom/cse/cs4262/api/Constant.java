@@ -17,6 +17,12 @@ public class Constant {
     public final static int MIN_PORT_NODE = 40000;
     public final static int MAX_PORT_NODE = 50000;
 
+    public final static String HTTP = "http://";
+
+    public static class UrlPattern {
+        public final static String SEARCH = "/search";
+
+    }
     public static class Command {
         public final static String REG = "REG";
         public final static String REGOK = "REGOK";
