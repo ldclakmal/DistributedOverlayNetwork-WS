@@ -142,7 +142,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
-        String uri = Constant.HTTP + searchRequest.getCredential().getIp() + File.pathSeparator + searchRequest.getCredential().getPort() + Constant.UrlPattern.SEARCH;
+        String uri = Constant.HTTP + sendCredentials.getIp() + File.pathSeparator + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
         System.out.println(result);
     }
@@ -263,7 +263,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public List<StatRecord> checkFilesInStatTable(String fileName, List<StatRecord> statTable) {
         Pattern pattern = Pattern.compile(fileName);
         List<StatRecord> StatTableSearchResult = new ArrayList();
-        for (StatRecord statRecord: statTable){
+        for (StatRecord statRecord : statTable) {
             if (pattern.matcher(statRecord.getSearchQuery()).find()) {
                 StatTableSearchResult.add(statRecord);
             }

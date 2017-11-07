@@ -7,6 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
@@ -81,7 +82,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
         return builder.sources(BootstrapNode.class);
     }
 
-    public static List<String> createFileList() {
+    private static List<String> createFileList() {
         ArrayList<String> fileList = new ArrayList<>();
         fileList.add("Adventures_of_Tintin");
         fileList.add("Jack_and_Jill");
@@ -113,7 +114,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @ResponseBody
     public String search(@RequestBody String json) {
         SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
-        nodeOpsWS.triggerSearchRequest(searchRequest);
-        return "SUCCESS";
+        new Thread(() -> nodeOpsWS.triggerSearchRequest(searchRequest));
+        return String.valueOf(HttpStatus.OK);
     }
 }
