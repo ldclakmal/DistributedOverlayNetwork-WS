@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
 import org.uom.cse.cs4262.api.Node;
-import org.uom.cse.cs4262.api.message.request.JoinRequest;
+import org.uom.cse.cs4262.api.message.request.LeaveRequest;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
+import org.uom.cse.cs4262.api.message.response.SearchResponse;
 import org.uom.cse.cs4262.ui.NodeGUI;
 
 import java.util.*;
@@ -53,7 +54,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
         Credential bootstrapCredential = new Credential(bootstrapIp, Constant.BOOTSTRAP_SERVER_PORT, Constant.BOOTSTRAP_SERVER_USERNAME);
         Credential nodeCredential = new Credential(nodeIp, nodePort, nodeUsername);
 
-        Node node = new Node(nodeCredential, createFileList(), new ArrayList<>(), new ArrayList<>(), bootstrapCredential);
+        Node node = new Node(nodeCredential, createFileList(), new ArrayList<>(), new ArrayList<>(), bootstrapCredential, 0, 0, 0, 0, new HashMap<>());
 
         nodeOpsWS = new NodeOpsWS(node);
         nodeOpsWS.start();
@@ -119,18 +120,26 @@ public class BootstrapNode extends SpringBootServletInitializer {
         return String.valueOf(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/searchok", method = RequestMethod.POST)
+    @ResponseBody
+    public String searchok(@RequestBody String json) {
+        SearchResponse searchResponse = new Gson().fromJson(json, SearchResponse.class);
+        nodeOpsWS.searchOk(searchResponse);
+        return String.valueOf(HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     @ResponseBody
     public String join(@RequestBody String json) {
-        JoinRequest joinRequest = new Gson().fromJson(json, JoinRequest.class);
-        new Thread(() -> nodeOpsWS.join(joinRequest.getCredential()));
         return Constant.Command.JOINOK;
     }
 
+    // remove me
     @RequestMapping(value = "/leave", method = RequestMethod.POST)
     @ResponseBody
-    public String leave() {
-        new Thread(() -> nodeOpsWS.leave());
+    public String leave(@RequestBody String json) {
+        LeaveRequest leaveRequest = new Gson().fromJson(json, LeaveRequest.class);
+        nodeOpsWS.removeMe(leaveRequest);
         return Constant.Command.LEAVEOK;
     }
 }

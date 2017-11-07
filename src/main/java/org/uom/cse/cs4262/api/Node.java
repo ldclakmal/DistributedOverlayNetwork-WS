@@ -1,5 +1,10 @@
 package org.uom.cse.cs4262.api;
 
+import org.uom.cse.cs4262.api.message.request.SearchRequest;
+import org.uom.cse.cs4262.api.message.response.SearchResponse;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,13 +19,23 @@ public class Node {
     private List<Credential> routingTable;
     private List<StatRecord> statTable;
     private Credential bootstrap;
+    private int receivedQueryCount;
+    private int forwardedQueryCount;
+    private int answeredQueryCount;
+    private int searchedQueryCount;
+    private HashMap<SearchRequest, ArrayList<SearchResponse>> searchTable;
 
-    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap) {
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<SearchRequest, ArrayList<SearchResponse>> searchTable) {
         this.credential = credential;
         this.fileList = fileList;
         this.routingTable = routingTable;
         this.statTable = statTable;
         this.bootstrap = bootstrap;
+        this.receivedQueryCount = receivedQueryCount;
+        this.forwardedQueryCount = forwardedQueryCount;
+        this.answeredQueryCount = answeredQueryCount;
+        this.searchedQueryCount = searchedQueryCount;
+        this.searchTable = searchTable;
     }
 
     public Credential getCredential() {
@@ -61,5 +76,45 @@ public class Node {
 
     public void setBootstrap(Credential bootstrap) {
         this.bootstrap = bootstrap;
+    }
+
+    public int getReceivedQueryCount() {
+        return receivedQueryCount;
+    }
+
+    public void setReceivedQueryCount(int receivedQueryCount) {
+        this.receivedQueryCount = receivedQueryCount;
+    }
+
+    public int getForwardedQueryCount() {
+        return forwardedQueryCount;
+    }
+
+    public void setForwardedQueryCount(int forwardedQueryCount) {
+        this.forwardedQueryCount = forwardedQueryCount;
+    }
+
+    public int getAnsweredQueryCount() {
+        return answeredQueryCount;
+    }
+
+    public void setAnsweredQueryCount(int answeredQueryCount) {
+        this.answeredQueryCount = answeredQueryCount;
+    }
+
+    public int getSearchedQueryCount() {
+        return searchedQueryCount;
+    }
+
+    public void setSearchedQueryCount(int searchedQueryCount) {
+        this.searchedQueryCount = searchedQueryCount;
+    }
+
+    public HashMap<SearchRequest, ArrayList<SearchResponse>> getSearchTable() {
+        return searchTable;
+    }
+
+    public void setSearchTable(HashMap<SearchRequest, ArrayList<SearchResponse>> searchTable) {
+        this.searchTable = searchTable;
     }
 }

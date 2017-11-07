@@ -22,6 +22,7 @@ public class Constant {
     public static class UrlPattern {
         public final static String SEARCH = "/search";
         public final static String SEARCHOK = "/searchok";
+        public final static String JOIN = "/join";
 
     }
     public static class Command {
