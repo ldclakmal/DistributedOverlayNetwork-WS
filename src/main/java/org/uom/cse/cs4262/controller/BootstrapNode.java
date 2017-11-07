@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
 import org.uom.cse.cs4262.api.Node;
+import org.uom.cse.cs4262.api.message.request.JoinRequest;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.ui.NodeGUI;
 
@@ -116,5 +117,20 @@ public class BootstrapNode extends SpringBootServletInitializer {
         SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
         new Thread(() -> nodeOpsWS.triggerSearchRequest(searchRequest));
         return String.valueOf(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/join", method = RequestMethod.POST)
+    @ResponseBody
+    public String join(@RequestBody String json) {
+        JoinRequest joinRequest = new Gson().fromJson(json, JoinRequest.class);
+        new Thread(() -> nodeOpsWS.join(joinRequest.getCredential()));
+        return Constant.Command.JOINOK;
+    }
+
+    @RequestMapping(value = "/leave", method = RequestMethod.POST)
+    @ResponseBody
+    public String leave() {
+        new Thread(() -> nodeOpsWS.leave());
+        return Constant.Command.LEAVEOK;
     }
 }
