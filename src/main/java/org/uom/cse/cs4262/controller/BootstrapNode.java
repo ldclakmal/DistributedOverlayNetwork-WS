@@ -19,6 +19,8 @@ import org.uom.cse.cs4262.api.message.response.SearchResponse;
 import org.uom.cse.cs4262.ui.NodeGUI;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Chanaka Lakmal
@@ -116,22 +118,30 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
     public String search(@RequestBody String json) {
+        System.out.println("Search api end point triggered");
         SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
-        new Thread(() -> nodeOpsWS.triggerSearchRequest(searchRequest));
+//        new Thread(() -> nodeOpsWS.triggerSearchRequest(searchRequest));
+        Executors.newScheduledThreadPool(1).schedule(
+                () -> nodeOpsWS.triggerSearchRequest(searchRequest),
+                10, TimeUnit.MILLISECONDS
+        );
+        System.out.println("End of search aPi");
         return String.valueOf(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/searchok", method = RequestMethod.POST)
     @ResponseBody
     public String searchok(@RequestBody String json) {
+        System.out.println("Search OK api end point triggered");
         SearchResponse searchResponse = new Gson().fromJson(json, SearchResponse.class);
-        nodeOpsWS.searchOk(searchResponse);
+        nodeOpsWS.searchSuccess(searchResponse);
         return String.valueOf(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     @ResponseBody
     public String join(@RequestBody String json) {
+        System.out.println("Join api end point triggered");
         JoinRequest joinRequest = new Gson().fromJson(json, JoinRequest.class);
         nodeOpsWS.joinMe(joinRequest);
         return Constant.Command.JOINOK;
@@ -141,6 +151,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @RequestMapping(value = "/leave", method = RequestMethod.POST)
     @ResponseBody
     public String leave(@RequestBody String json) {
+        System.out.println("Leave api end point triggered");
         LeaveRequest leaveRequest = new Gson().fromJson(json, LeaveRequest.class);
         nodeOpsWS.removeMe(leaveRequest);
         return Constant.Command.LEAVEOK;
