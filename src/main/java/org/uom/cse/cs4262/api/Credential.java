@@ -39,4 +39,17 @@ public class Credential {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Credential)) {
+            return false;
+        }
+        Credential that = (Credential) other;
+        // Custom equality check here.
+        return this.ip.equals(that.getIp())
+                && this.port == that.getPort()
+                && this.username.equals(that.getUsername());
+    }
+
 }

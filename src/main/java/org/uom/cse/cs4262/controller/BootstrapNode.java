@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
 import org.uom.cse.cs4262.api.Node;
+import org.uom.cse.cs4262.api.message.request.JoinRequest;
 import org.uom.cse.cs4262.api.message.request.LeaveRequest;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.api.message.response.SearchResponse;
@@ -130,7 +131,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     @ResponseBody
-    public String join(@RequestBody String json) {
+    public String join(@RequestBody String json) { 
         return Constant.Command.JOINOK;
     }
 

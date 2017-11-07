@@ -106,7 +106,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         JoinRequest joinRequest = new JoinRequest(node.getCredential());
         String msg = joinRequest.getMessageAsString(Constant.Command.JOIN);
         System.out.println(msg);
-        String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.JOIN;
+        String uri = Constant.HTTP + neighbourCredential.getIp() + ":" + neighbourCredential.getPort() + Constant.UrlPattern.JOIN;
         String result = restTemplate.postForObject(uri, new Gson().toJson(joinRequest), String.class);
         System.out.println(result);
 
@@ -134,7 +134,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
         System.out.println(msg);
         for (Credential neighbourCredential : node.getRoutingTable()) {
-            String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
+            String uri = Constant.HTTP + neighbourCredential.getIp() + ":" + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
             String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
             System.out.println(result);
         }
@@ -142,7 +142,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void removeMe(LeaveRequest leaveRequest) {
-        // TODO: remove me logic
+        //check my routing table to see if leaveRequest exist
+        for (Credential credential : node.getRoutingTable()) {
+            if (credential.equals(leaveRequest.getCredential())) {
+                node.getRoutingTable().remove(credential);
+                System.out.println("Removed");
+                break;
+            }
+        }
+        System.out.println("my routing table");
+        printRoutingTable(node.getRoutingTable());
     }
 
 //        @Override
@@ -161,7 +170,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
         System.out.println(msg);
-        String uri = Constant.HTTP + sendCredentials.getIp() + File.pathSeparator + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
+        String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
         System.out.println(result);
     }
@@ -171,7 +180,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void searchOk(SearchResponse searchResponse) {
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
         System.out.println(msg);
-        String uri = Constant.HTTP + searchResponse.getCredential().getIp() + File.pathSeparator + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
+        String uri = Constant.HTTP + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
         String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
         System.out.println(result);
     }
