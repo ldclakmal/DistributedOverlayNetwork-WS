@@ -3,8 +3,10 @@ package org.uom.cse.cs4262.feature;
 import org.uom.cse.cs4262.api.Constant;
 import org.uom.cse.cs4262.api.Credential;
 import org.uom.cse.cs4262.api.message.Message;
-import org.uom.cse.cs4262.api.message.request.*;
-import org.uom.cse.cs4262.api.message.response.*;
+import org.uom.cse.cs4262.api.message.request.RegisterRequest;
+import org.uom.cse.cs4262.api.message.request.UnregisterRequest;
+import org.uom.cse.cs4262.api.message.response.RegisterResponse;
+import org.uom.cse.cs4262.api.message.response.UnregisterResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.StringTokenizer;
 
 public class Parser {
 
-    public static Message parse(String message, Credential senderCredential) {
+    public static Message parse(String message) {
 
         System.out.println("Message received : " + message);
         StringTokenizer st = new StringTokenizer(message, " ");
@@ -59,52 +61,52 @@ public class Parser {
             int value = Integer.parseInt(st.nextToken());
             return new UnregisterResponse(value);
 
-        } else if (command.equals(Constant.Command.LEAVE)) {
-            String ip = st.nextToken();
-            int port = Integer.parseInt(st.nextToken());
-            Credential crd = new Credential(ip, port, null);
-            return new LeaveRequest(crd);
-
-        } else if (command.equals(Constant.Command.JOIN)) {
-            String ip = st.nextToken();
-            int port = Integer.parseInt(st.nextToken());
-            Credential joinerCredentials = new Credential(ip, port, null);
-            return new JoinRequest(joinerCredentials);
-
-        } else if (command.equals(Constant.Command.JOINOK)) {
-            int value = Integer.parseInt(st.nextToken());
-            return new JoinResponse(value, senderCredential);
-
-        } else if (command.equals(Constant.Command.LEAVEOK)) {
-            int value = Integer.parseInt(st.nextToken());
-            return new LeaveResponse(value);
-
-        } else if (command.equals(Constant.Command.SEARCH)) {
-            int seqNum = Integer.parseInt(st.nextToken());
-            String ip = st.nextToken();
-            int port = Integer.parseInt(st.nextToken());
-            String fileName = st.nextToken();
-            int hops = Integer.parseInt(st.nextToken());
-            Credential crd = new Credential(ip, port, null);
-            return new SearchRequest(seqNum, crd, fileName, hops);
-
-        } else if (command.equals(Constant.Command.SEARCHOK)) {
-            int sequenceNo = Integer.parseInt(st.nextToken());
-            int numOfFiles = Integer.parseInt(st.nextToken());
-            String ip = st.nextToken();
-            int port = Integer.parseInt(st.nextToken());
-            int hops = Integer.parseInt(st.nextToken());
-            List<String> fileList = new ArrayList<>();
-            if (numOfFiles > 0 && !(numOfFiles == Constant.Codes.Search.ERROR_OTHER || numOfFiles == Constant.Codes.Search.ERROR_NODE_UNREACHABLE)) {
-                for (int i = 0; i < numOfFiles; i++) {
-                    fileList.add(st.nextToken());
-                }
-            }
-            Credential endNodeCredentials = new Credential(ip, port, null);
-            return new SearchResponse(sequenceNo, numOfFiles, endNodeCredentials, hops, fileList);
-
-        } else if (command.equals(Constant.Command.ERROR)) {
-            return new ErrorResponse();
+//        } else if (command.equals(Constant.Command.LEAVE)) {
+//            String ip = st.nextToken();
+//            int port = Integer.parseInt(st.nextToken());
+//            Credential crd = new Credential(ip, port, null);
+//            return new LeaveRequest(crd);
+//
+//        } else if (command.equals(Constant.Command.JOIN)) {
+//            String ip = st.nextToken();
+//            int port = Integer.parseInt(st.nextToken());
+//            Credential joinerCredentials = new Credential(ip, port, null);
+//            return new JoinRequest(joinerCredentials);
+//
+//        } else if (command.equals(Constant.Command.JOINOK)) {
+//            int value = Integer.parseInt(st.nextToken());
+//            return new JoinResponse(value, senderCredential);
+//
+//        } else if (command.equals(Constant.Command.LEAVEOK)) {
+//            int value = Integer.parseInt(st.nextToken());
+//            return new LeaveResponse(value);
+//
+//        } else if (command.equals(Constant.Command.SEARCH)) {
+//            int seqNum = Integer.parseInt(st.nextToken());
+//            String ip = st.nextToken();
+//            int port = Integer.parseInt(st.nextToken());
+//            String fileName = st.nextToken();
+//            int hops = Integer.parseInt(st.nextToken());
+//            Credential crd = new Credential(ip, port, null);
+//            return new SearchRequest(seqNum, crd, fileName, hops);
+//
+//        } else if (command.equals(Constant.Command.SEARCHOK)) {
+//            int sequenceNo = Integer.parseInt(st.nextToken());
+//            int numOfFiles = Integer.parseInt(st.nextToken());
+//            String ip = st.nextToken();
+//            int port = Integer.parseInt(st.nextToken());
+//            int hops = Integer.parseInt(st.nextToken());
+//            List<String> fileList = new ArrayList<>();
+//            if (numOfFiles > 0 && !(numOfFiles == Constant.Codes.Search.ERROR_OTHER || numOfFiles == Constant.Codes.Search.ERROR_NODE_UNREACHABLE)) {
+//                for (int i = 0; i < numOfFiles; i++) {
+//                    fileList.add(st.nextToken());
+//                }
+//            }
+//            Credential endNodeCredentials = new Credential(ip, port, null);
+//            return new SearchResponse(sequenceNo, numOfFiles, endNodeCredentials, hops, fileList);
+//
+//        } else if (command.equals(Constant.Command.ERROR)) {
+//            return new ErrorResponse();
         }
 
         return null;

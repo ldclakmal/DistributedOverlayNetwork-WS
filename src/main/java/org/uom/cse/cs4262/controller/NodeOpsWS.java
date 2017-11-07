@@ -55,8 +55,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             try {
                 socket.receive(datagramPacket);
                 String message = new String(datagramPacket.getData(), 0, datagramPacket.getLength());
-                Credential senderCredential = new Credential(datagramPacket.getAddress().getHostAddress(), datagramPacket.getPort(), null);
-                Message response = Parser.parse(message, senderCredential);
+                Message response = Parser.parse(message);
                 processResponse(response);
             } catch (IOException e) {
                 e.printStackTrace();
