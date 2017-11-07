@@ -124,8 +124,14 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void joinMe(JoinRequest joinRequest) {
-        node.getRoutingTable().add(joinRequest.getCredential());
         System.out.println(joinRequest.getCredential().getUsername() + " sent me a JOIN");
+        //check if already exist
+        if (node.getRoutingTable().contains(joinRequest.getCredential())) {
+            System.out.println("But he's already in...");
+        } else {
+            node.getRoutingTable().add(joinRequest.getCredential());
+        }
+
         printRoutingTable(node.getRoutingTable());
     }
 
@@ -164,12 +170,12 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void removeMe(LeaveRequest leaveRequest) {
         //check my routing table to see if leaveRequest exist
-        for (Credential credential : node.getRoutingTable()) {
-            if (credential.equals(leaveRequest.getCredential())) {
-                node.getRoutingTable().remove(credential);
-                break;
-            }
+//        for (Credential credential : node.getRoutingTable()) {
+        if (node.getRoutingTable().contains(leaveRequest.getCredential())) {
+            node.getRoutingTable().remove(leaveRequest.getCredential());
         }
+//        }
+        removeFromStatTable(leaveRequest.getCredential());
         System.out.println(leaveRequest.getCredential().getUsername() + " sent me a LEAVE");
         printRoutingTable(node.getRoutingTable());
     }
@@ -359,5 +365,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
         System.out.println("--------------------------------------------------------");
     }
+
+    @Override
+    public void removeFromStatTable(Credential credential) {
+        List<StatRecord> statTable = node.getStatTable();
+        for (StatRecord statRecord : statTable) {
+            if (credential.equals(statRecord.getServedNode())) {
+                statTable.remove(statRecord);
+            }
+        }
+    }
+
 
 }
