@@ -32,8 +32,6 @@ public interface NodeOps {
 
     void searchOk(SearchResponse searchResponse);
 
-    List<String> createFileList();
-
     void processResponse(Message response);
 
     void error(Credential senderCredential);

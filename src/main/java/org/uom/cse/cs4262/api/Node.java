@@ -13,6 +13,15 @@ public class Node {
     private List<String> fileList;
     private List<Credential> routingTable;
     private List<StatRecord> statTable;
+    private Credential bootstrap;
+
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap) {
+        this.credential = credential;
+        this.fileList = fileList;
+        this.routingTable = routingTable;
+        this.statTable = statTable;
+        this.bootstrap = bootstrap;
+    }
 
     public Credential getCredential() {
         return credential;
@@ -44,5 +53,13 @@ public class Node {
 
     public void setStatTable(List<StatRecord> statTable) {
         this.statTable = statTable;
+    }
+
+    public Credential getBootstrap() {
+        return bootstrap;
+    }
+
+    public void setBootstrap(Credential bootstrap) {
+        this.bootstrap = bootstrap;
     }
 }
