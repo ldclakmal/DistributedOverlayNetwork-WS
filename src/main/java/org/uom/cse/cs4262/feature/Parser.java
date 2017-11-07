@@ -20,7 +20,7 @@ public class Parser {
 
     public static Message parse(String message, Credential senderCredential) {
 
-        System.out.println("Message received : " + message + "\n");
+        System.out.println("Message received : " + message);
         StringTokenizer st = new StringTokenizer(message, " ");
 
         String length = st.nextToken();

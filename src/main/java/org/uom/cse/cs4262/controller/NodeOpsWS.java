@@ -1,15 +1,25 @@
 package org.uom.cse.cs4262.controller;
 
 import com.google.gson.Gson;
-import org.uom.cse.cs4262.api.*;
+import org.springframework.web.client.RestTemplate;
+import org.uom.cse.cs4262.api.Constant;
+import org.uom.cse.cs4262.api.Credential;
+import org.uom.cse.cs4262.api.Node;
+import org.uom.cse.cs4262.api.NodeOps;
 import org.uom.cse.cs4262.api.message.Message;
 import org.uom.cse.cs4262.api.message.request.*;
 import org.uom.cse.cs4262.api.message.response.*;
 import org.uom.cse.cs4262.feature.Parser;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -22,29 +32,17 @@ import java.util.stream.Collectors;
 public class NodeOpsWS implements NodeOps, Runnable {
 
     private Node node;
-    private Credential bootstrapServerCredential;
     private DatagramSocket socket;
-    private Thread nodeThread;
     private boolean regOk = false;
 
-    public NodeOpsWS(Credential bootstrapServerCredential, Credential nodeCredential) {
-        this.bootstrapServerCredential = bootstrapServerCredential;
-
-        this.node = new Node();
-        node.setCredential(nodeCredential);
-        node.setFileList(createFileList());
-        node.setRoutingTable(new ArrayList());
-        node.setStatTable(new ArrayList());
-
-        this.start();
-    }
+    RestTemplate restTemplate = new RestTemplate();
 
     public Node getNode() {
         return node;
     }
 
-    public Thread getNodeThread() {
-        return nodeThread;
+    public NodeOpsWS(Node node) {
+        this.node = node;
     }
 
     @Override
@@ -74,8 +72,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        nodeThread = new Thread(this);
-        nodeThread.start();
+        new Thread(this).start();
     }
 
     @Override
@@ -83,7 +80,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         RegisterRequest registerRequest = new RegisterRequest(node.getCredential());
         String msg = registerRequest.getMessageAsString(Constant.Command.REG);
         try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(bootstrapServerCredential.getIp()), bootstrapServerCredential.getPort()));
+            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(node.getBootstrap().getIp()), node.getBootstrap().getPort()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,7 +91,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         UnregisterRequest unregisterRequest = new UnregisterRequest(node.getCredential());
         String msg = unregisterRequest.getMessageAsString(Constant.Command.UNREG);
         try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(bootstrapServerCredential.getIp()), bootstrapServerCredential.getPort()));
+            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(node.getBootstrap().getIp()), node.getBootstrap().getPort()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -124,7 +121,6 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void leave() {
-
         LeaveRequest leaveRequest = new LeaveRequest(node.getCredential());
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
         try {
@@ -149,9 +145,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
-//        String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
-        callAPI(sendCredentials.getIp(), sendCredentials.getPort(), "search", "GET", new Gson().toJson(searchRequest));
-        System.out.println("search called");
+        String uri = Constant.HTTP + searchRequest.getCredential().getIp() + File.pathSeparator + searchRequest.getCredential().getPort() + Constant.UrlPattern.SEARCH;
+        String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
+        System.out.println(result);
     }
 
     @Override
@@ -173,35 +169,6 @@ public class NodeOpsWS implements NodeOps, Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public List<String> createFileList() {
-        ArrayList<String> fileList = new ArrayList<>();
-        fileList.add("Adventures_of_Tintin");
-        fileList.add("Jack_and_Jill");
-        fileList.add("Glee");
-        fileList.add("The_Vampire Diarie");
-        fileList.add("King_Arthur");
-        fileList.add("Windows_XP");
-        fileList.add("Harry_Potter");
-        fileList.add("Kung_Fu_Panda");
-        fileList.add("Lady_Gaga");
-        fileList.add("Twilight");
-        fileList.add("Windows_8");
-        fileList.add("Mission_Impossible");
-        fileList.add("Turn_Up_The_Music");
-        fileList.add("Super_Mario");
-        fileList.add("American_Pickers");
-        fileList.add("Microsoft_Office_2010");
-        fileList.add("Happy_Feet");
-        fileList.add("Modern_Family");
-        fileList.add("American_Idol");
-        fileList.add("Hacking_for_Dummies");
-        Collections.shuffle(fileList);
-        List<String> subFileList = fileList.subList(0, 5);
-        System.out.println("File List : " + Arrays.toString(subFileList.toArray()) + "\n");
-        return subFileList;
     }
 
     @Override
@@ -233,6 +200,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 printRoutingTable(routingTable);
                 //TODO: check whether the received nodes are alive before adding to routing table
                 this.node.setRoutingTable(routingTable);
+                System.setProperty(Constant.SERVER_PORT, String.valueOf(node.getCredential().getPort()));
                 this.regOk = true;
             }
 
@@ -350,62 +318,4 @@ public class NodeOpsWS implements NodeOps, Runnable {
         System.out.println("--------------------------------------------------------");
     }
 
-
-    @Override
-    public String callAPI(String ip, int port, String pattern, String method, String body) {
-        InputStreamReader inputStreamReader = null;
-        OutputStream outputStream = null;
-        BufferedReader bufferedReader = null;
-
-        try {
-            URL url = new URL("http://" + ip + File.pathSeparator + port + File.separator + pattern);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod(method);
-
-            outputStream = conn.getOutputStream();
-            outputStream.write(body.getBytes());
-            outputStream.flush();
-
-            if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-            }
-
-            inputStreamReader = new InputStreamReader((conn.getInputStream()));
-            bufferedReader = new BufferedReader(inputStreamReader);
-
-            String read;
-            String response = "";
-            while ((read = bufferedReader.readLine()) != null) {
-                response += read;
-            }
-
-            conn.disconnect();
-            return response;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (inputStreamReader != null) {
-                try {
-                    inputStreamReader.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
 }

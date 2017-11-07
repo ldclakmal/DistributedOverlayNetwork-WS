@@ -1,7 +1,6 @@
 package org.uom.cse.cs4262.ui;
 
-import javafx.util.Pair;
-import org.uom.cse.cs4262.api.Node;
+import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.controller.NodeOpsWS;
 
 import javax.swing.*;
@@ -10,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class NodeGUI extends Console {
+public class NodeGUI {
 
     private JButton btnSearch;
     private JButton btnUnregister;
@@ -24,10 +23,13 @@ public class NodeGUI extends Console {
     private DefaultTableModel searchData;
     private DefaultTableModel myFileData;
 
+    private NodeOpsWS nodeOpsWS;
+
+    private int sequenceNo;
 
     public NodeGUI(NodeOpsWS nodeOpsWS) {
 
-        super(nodeOpsWS);
+        this.nodeOpsWS = nodeOpsWS;
 
         btnSearch = new JButton("SEARCH");
         btnUnregister = new JButton("UNREGISTER");
@@ -97,7 +99,7 @@ public class NodeGUI extends Console {
             public void actionPerformed(ActionEvent e) {
                 btnSearch.setEnabled(false);
                 btnSearch.setName("SEARCHING");
-                search(txtSearch.getText().trim());
+                nodeOpsWS.search(new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearch.getText().trim(), 0), nodeOpsWS.getNode().getCredential());
                 btnSearch.setEnabled(true);
                 btnSearch.setName("SEARCH");
                 txtSearch.selectAll();
@@ -128,7 +130,7 @@ public class NodeGUI extends Console {
             public void actionPerformed(ActionEvent e) {
                 try {
                     btnLeave.setEnabled(false);
-                    leave();
+                    nodeOpsWS.leave();
                     JOptionPane.showMessageDialog(frame, "Leave Successful!");
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(frame, "Leave failed: " + e1.getMessage());
@@ -143,7 +145,7 @@ public class NodeGUI extends Console {
             public void actionPerformed(ActionEvent e) {
                 btnUnregister.setEnabled(false);
                 try {
-                    unregister();
+                    nodeOpsWS.unRegister();
                     JOptionPane.showMessageDialog(frame, "Unregistered!");
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(frame, "Unregister failed: " + e1.getMessage());
@@ -154,7 +156,6 @@ public class NodeGUI extends Console {
         });
     }
 
-    @Override
     public void start() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             //Set up the content pane
@@ -164,16 +165,6 @@ public class NodeGUI extends Console {
             frame.setVisible(true);
         });
     }
-
-    private void populateSearchResult(List<Pair<String, Node>> resourceLocations) {
-        while (searchData.getRowCount() != 0) {
-            searchData.removeRow(0);
-        }
-        for (Pair<String, Node> entry : resourceLocations) {
-            searchData.addRow(new Object[]{entry.getKey(), entry.getValue()});
-        }
-    }
-
 
 }
 

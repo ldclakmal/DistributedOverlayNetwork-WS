@@ -32,8 +32,6 @@ public interface NodeOps {
 
     void searchOk(SearchResponse searchResponse);
 
-    List<String> createFileList();
-
     void processResponse(Message response);
 
     void error(Credential senderCredential);
@@ -47,6 +45,4 @@ public interface NodeOps {
     void triggerSearchRequest(SearchRequest searchRequest);
 
     void printRoutingTable(List<Credential> routingTable);
-
-    String callAPI(String ip, int port, String pattern, String method, String body);
 }
