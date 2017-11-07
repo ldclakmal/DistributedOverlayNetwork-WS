@@ -1,6 +1,7 @@
 package org.uom.cse.cs4262.controller;
 
 import com.google.gson.Gson;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.uom.cse.cs4262.api.*;
 import org.uom.cse.cs4262.api.message.Message;
@@ -107,12 +108,22 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String msg = joinRequest.getMessageAsString(Constant.Command.JOIN);
         System.out.println(msg);
         String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.JOIN;
-        String result = restTemplate.postForObject(uri, new Gson().toJson(joinRequest), String.class);
-        System.out.println(result);
-
-        if (result.equals(Constant.Command.JOINOK))
+        System.out.println(uri);
+        String result = "";
+        try {
+            result = restTemplate.postForObject(uri, new Gson().toJson(joinRequest), String.class);
+            System.out.println(result);
+        }catch (ResourceAccessException exception){
+            //connection refused to the api end point
+            if (node.getRoutingTable().contains(neighbourCredential)){
+                node.getRoutingTable().remove(neighbourCredential);
+                System.out.println(neighbourCredential.getIp() + "node is not available. So it removed from routing table.");
+            }
+            //Todo: Remove this neighbour from stat table
+        }
+        if (result.equals(Constant.Command.JOINOK)) {
             node.getRoutingTable().add(neighbourCredential);
-
+        }
         printRoutingTable(node.getRoutingTable());
     }
 
@@ -135,8 +146,12 @@ public class NodeOpsWS implements NodeOps, Runnable {
         System.out.println(msg);
         for (Credential neighbourCredential : node.getRoutingTable()) {
             String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
-            String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
-            System.out.println(result);
+            try {
+                String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
+                System.out.println(result);
+            }catch (ResourceAccessException exception){
+                //connection refused to the api end point
+            }
         }
     }
 
@@ -162,8 +177,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
         System.out.println(msg);
         String uri = Constant.HTTP + sendCredentials.getIp() + File.pathSeparator + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
-        String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
-        System.out.println(result);
+        try {
+            String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
+            System.out.println(result);
+        }catch (ResourceAccessException exception){
+            //connection refused to the api end point
+            if (node.getRoutingTable().contains(sendCredentials)){
+                node.getRoutingTable().remove(sendCredentials);
+                System.out.println(sendCredentials.getIp() + "node is not available and removed from routing table.");
+            }
+            //Todo: Remove this neighbour from stat table
+        }
     }
 
     // done
@@ -172,8 +196,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
         System.out.println(msg);
         String uri = Constant.HTTP + searchResponse.getCredential().getIp() + File.pathSeparator + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
-        String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
-        System.out.println(result);
+        try {
+            String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
+            System.out.println(result);
+        }catch (ResourceAccessException exception){
+            //connection refused to the api end point
+            if (node.getRoutingTable().contains(searchResponse.getCredential())){
+                node.getRoutingTable().remove(searchResponse.getCredential());
+                System.out.println(searchResponse.getCredential().getIp() + "node is not available and removed from routing table.");
+            }
+            //Todo: Remove this neighbour from stat table
+        }
     }
 
 
