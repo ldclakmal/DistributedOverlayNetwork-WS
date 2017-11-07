@@ -145,7 +145,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
-        String uri = "http://" + searchRequest.getCredential().getIp() + File.pathSeparator + searchRequest.getCredential().getPort() + File.separator + "search";
+        String uri = Constant.HTTP + searchRequest.getCredential().getIp() + File.pathSeparator + searchRequest.getCredential().getPort() + Constant.UrlPattern.SEARCH;
         String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
         System.out.println(result);
     }

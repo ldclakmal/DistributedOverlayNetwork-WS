@@ -1,5 +1,6 @@
 package org.uom.cse.cs4262.controller;
 
+import com.google.gson.Gson;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -110,8 +111,8 @@ public class BootstrapNode extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
-    public String root(@RequestBody SearchRequest searchRequest) {
-//        SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
+    public String search(@RequestBody String json) {
+        SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
         nodeOpsWS.triggerSearchRequest(searchRequest);
         return "SUCCESS";
     }
