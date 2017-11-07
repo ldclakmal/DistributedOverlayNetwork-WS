@@ -99,7 +99,7 @@ public class NodeGUI {
             public void actionPerformed(ActionEvent e) {
                 btnSearch.setEnabled(false);
                 btnSearch.setName("SEARCHING");
-                nodeOpsWS.search(new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearch.getText().trim(), 0), nodeOpsWS.getNode().getCredential());
+                nodeOpsWS.triggerSearchRequest(new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearch.getText().trim(), 0));
                 btnSearch.setEnabled(true);
                 btnSearch.setName("SEARCH");
                 txtSearch.selectAll();
