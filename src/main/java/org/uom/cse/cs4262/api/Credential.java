@@ -47,9 +47,9 @@ public class Credential {
         }
         Credential that = (Credential) other;
         // Custom equality check here.
-        return this.ip.equals(that.getIp())
-                && this.port == that.getPort()
-                && this.username.equals(that.getUsername());
+        return (this.ip.equals(that.getIp())
+                && this.port == that.getPort());
+//                && this.username.equals(that.getUsername()));
     }
 
 }

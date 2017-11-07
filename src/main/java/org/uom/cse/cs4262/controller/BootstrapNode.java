@@ -132,6 +132,8 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     @ResponseBody
     public String join(@RequestBody String json) {
+        JoinRequest joinRequest = new Gson().fromJson(json, JoinRequest.class);
+        nodeOpsWS.joinMe(joinRequest);
         return Constant.Command.JOINOK;
     }
 
