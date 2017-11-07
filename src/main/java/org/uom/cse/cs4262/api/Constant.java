@@ -23,6 +23,7 @@ public class Constant {
         public final static String SEARCH = "/search";
         public final static String SEARCHOK = "/searchok";
         public final static String JOIN = "/join";
+        public final static String LEAVE = "/leave";
 
     }
     public static class Command {

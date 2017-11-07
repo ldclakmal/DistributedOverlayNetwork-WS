@@ -135,7 +135,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
         System.out.println(msg);
         for (Credential neighbourCredential : node.getRoutingTable()) {
-            String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.SEARCH;
+            String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
             String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
             System.out.println(result);
         }
