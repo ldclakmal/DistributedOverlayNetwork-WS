@@ -5,7 +5,9 @@ import org.springframework.web.client.RestTemplate;
 import org.uom.cse.cs4262.api.*;
 import org.uom.cse.cs4262.api.message.Message;
 import org.uom.cse.cs4262.api.message.request.*;
-import org.uom.cse.cs4262.api.message.response.*;
+import org.uom.cse.cs4262.api.message.response.RegisterResponse;
+import org.uom.cse.cs4262.api.message.response.SearchResponse;
+import org.uom.cse.cs4262.api.message.response.UnregisterResponse;
 import org.uom.cse.cs4262.feature.Parser;
 
 import java.io.File;
@@ -62,6 +64,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    // done
     @Override
     public void start() {
         try {
@@ -72,10 +75,12 @@ public class NodeOpsWS implements NodeOps, Runnable {
         new Thread(this).start();
     }
 
+    // done
     @Override
     public void register() {
         RegisterRequest registerRequest = new RegisterRequest(node.getCredential());
         String msg = registerRequest.getMessageAsString(Constant.Command.REG);
+        System.out.println(msg);
         try {
             socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(node.getBootstrap().getIp()), node.getBootstrap().getPort()));
         } catch (IOException e) {
@@ -83,10 +88,12 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    // done
     @Override
     public void unRegister() {
         UnregisterRequest unregisterRequest = new UnregisterRequest(node.getCredential());
         String msg = unregisterRequest.getMessageAsString(Constant.Command.UNREG);
+        System.out.println(msg);
         try {
             socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(node.getBootstrap().getIp()), node.getBootstrap().getPort()));
         } catch (IOException e) {
@@ -94,53 +101,63 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    // done
     @Override
     public void join(Credential neighbourCredential) {
         JoinRequest joinRequest = new JoinRequest(node.getCredential());
         String msg = joinRequest.getMessageAsString(Constant.Command.JOIN);
-        try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(neighbourCredential.getIp()), neighbourCredential.getPort()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println(msg);
+        String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.JOIN;
+        String result = restTemplate.postForObject(uri, new Gson().toJson(joinRequest), String.class);
+        System.out.println(result);
+
+        if (result.equals(Constant.Command.JOINOK))
+            node.getRoutingTable().add(neighbourCredential);
+
+        printRoutingTable(node.getRoutingTable());
     }
 
-    @Override
-    public void joinOk(Credential senderCredential) {
-        JoinResponse joinResponse = new JoinResponse(0, node.getCredential());
-        String msg = joinResponse.getMessageAsString(Constant.Command.JOINOK);
-        try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(senderCredential.getIp()), senderCredential.getPort()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void joinOk(Credential senderCredential) {
+//        JoinResponse joinResponse = new JoinResponse(0, node.getCredential());
+//        String msg = joinResponse.getMessageAsString(Constant.Command.JOINOK);
+//        try {
+//            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(senderCredential.getIp()), senderCredential.getPort()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
+    // done
     @Override
     public void leave() {
         LeaveRequest leaveRequest = new LeaveRequest(node.getCredential());
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
         System.out.println(msg);
-        try {
-            for (Credential neighbourCredential : node.getRoutingTable()) {
-                socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(neighbourCredential.getIp()), neighbourCredential.getPort()));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Credential neighbourCredential : node.getRoutingTable()) {
+            String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.SEARCH;
+            String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
+            System.out.println(result);
         }
     }
 
     @Override
-    public void leaveOk(Credential senderCredentials) {
-        LeaveResponse leaveResponse = new LeaveResponse(0);
-        String msg = leaveResponse.getMessageAsString(Constant.Command.LEAVEOK);
-        try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(senderCredentials.getIp()), senderCredentials.getPort()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void removeMe(LeaveRequest leaveRequest) {
+        // TODO: remove me logic
     }
 
+//        @Override
+//    public void leaveOk(Credential senderCredentials) {
+//        LeaveResponse leaveResponse = new LeaveResponse(0);
+//        String msg = leaveResponse.getMessageAsString(Constant.Command.LEAVEOK);
+//        try {
+//            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(senderCredentials.getIp()), senderCredentials.getPort()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    // done
     @Override
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
@@ -150,6 +167,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         System.out.println(result);
     }
 
+    // done
     @Override
     public void searchOk(SearchResponse searchResponse) {
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
@@ -159,16 +177,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
         System.out.println(result);
     }
 
-    @Override
-    public void error(Credential senderCredential) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        String msg = errorResponse.getMessageAsString(Constant.Command.ERROR);
-        try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(senderCredential.getIp()), senderCredential.getPort()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
+//    @Override
+//    public void error(Credential senderCredential) {
+//        ErrorResponse errorResponse = new ErrorResponse();
+//        String msg = errorResponse.getMessageAsString(Constant.Command.ERROR);
+//        try {
+//            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(senderCredential.getIp()), senderCredential.getPort()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void processResponse(Message response) {
@@ -192,13 +211,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 System.out.println("Error in command");
             } else {
                 List<Credential> credentialList = registerResponse.getCredentials();
-                List<Credential> routingTable = new ArrayList();
                 for (Credential credential : credentialList) {
-                    routingTable.add(credential);
+                    join(credential);
                 }
-                printRoutingTable(routingTable);
-                //TODO: check whether the received nodes are alive before adding to routing table
-                this.node.setRoutingTable(routingTable);
                 System.setProperty(Constant.SERVER_PORT, String.valueOf(node.getCredential().getPort()));
                 this.regOk = true;
             }

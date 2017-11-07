@@ -1,6 +1,7 @@
 package org.uom.cse.cs4262.api;
 
 import org.uom.cse.cs4262.api.message.Message;
+import org.uom.cse.cs4262.api.message.request.LeaveRequest;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.api.message.response.SearchResponse;
 
@@ -22,11 +23,13 @@ public interface NodeOps {
 
     void join(Credential neighbourCredential);
 
-    void joinOk(Credential senderCredential);
+//    void joinOk(Credential senderCredential);
 
     void leave();
 
-    void leaveOk(Credential senderCredential);
+    void removeMe(LeaveRequest leaveRequest);
+
+//    void leaveOk(Credential senderCredential);
 
     void search(SearchRequest searchRequest, Credential sendCredential);
 
@@ -34,7 +37,7 @@ public interface NodeOps {
 
     void processResponse(Message response);
 
-    void error(Credential senderCredential);
+//    void error(Credential senderCredential);
 
     boolean isRegOk();
 
