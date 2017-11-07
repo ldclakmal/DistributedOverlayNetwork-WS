@@ -16,8 +16,10 @@ import org.uom.cse.cs4262.api.message.request.JoinRequest;
 import org.uom.cse.cs4262.api.message.request.LeaveRequest;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.api.message.response.SearchResponse;
+import org.uom.cse.cs4262.ui.MainUI;
 import org.uom.cse.cs4262.ui.NodeGUI;
 
+import javax.swing.*;
 import java.util.*;
 
 /**
@@ -73,8 +75,18 @@ public class BootstrapNode extends SpringBootServletInitializer {
             }
         }
         javax.swing.SwingUtilities.invokeLater(() -> {
-            NodeGUI nodeGUI = new NodeGUI(nodeOpsWS);
-            nodeGUI.start();
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            MainUI mainFrame = new MainUI(nodeOpsWS);
+            mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            mainFrame.pack();
+            mainFrame.setTitle("Distributed Systems Client App");
+            mainFrame.setLocationRelativeTo(null);
+            mainFrame.start();
         });
 
         SpringApplication.run(BootstrapNode.class, args);
