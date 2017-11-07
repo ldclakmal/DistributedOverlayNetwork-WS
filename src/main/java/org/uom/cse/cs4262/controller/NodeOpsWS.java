@@ -101,13 +101,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    /**
+     * @param neighbourCredential Called when I'm 'JOIN'-ing
+     */
     // done
     @Override
     public void join(Credential neighbourCredential) {
         JoinRequest joinRequest = new JoinRequest(node.getCredential());
         String msg = joinRequest.getMessageAsString(Constant.Command.JOIN);
         System.out.println(msg);
-        String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.JOIN;
+        String uri = Constant.HTTP + neighbourCredential.getIp() + ":" + neighbourCredential.getPort() + Constant.UrlPattern.JOIN;
         System.out.println(uri);
         String result = "";
         try {
@@ -127,6 +130,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
         printRoutingTable(node.getRoutingTable());
     }
 
+    /**
+     * @param joinRequest Called when I'm listening and someone else sends me a 'join'
+     */
+    @Override
+    public void joinMe(JoinRequest joinRequest) {
+        node.getRoutingTable().add(joinRequest.getCredential());
+        System.out.println(joinRequest.getCredential().getUsername() + " sent me a JOIN");
+        printRoutingTable(node.getRoutingTable());
+    }
+
 //    @Override
 //    public void joinOk(Credential senderCredential) {
 //        JoinResponse joinResponse = new JoinResponse(0, node.getCredential());
@@ -139,13 +152,18 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //    }
 
     // done
+
+
+    /**
+     * Called when I'm 'LEAVE'-ing
+     */
     @Override
     public void leave() {
         LeaveRequest leaveRequest = new LeaveRequest(node.getCredential());
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
         System.out.println(msg);
         for (Credential neighbourCredential : node.getRoutingTable()) {
-            String uri = Constant.HTTP + neighbourCredential.getIp() + File.pathSeparator + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
+            String uri = Constant.HTTP + neighbourCredential.getIp() + ":" + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
             try {
                 String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
                 System.out.println(result);
@@ -155,9 +173,20 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    /**
+     * @param leaveRequest Called when I amd listening and someone else sends me a 'leave'
+     */
     @Override
     public void removeMe(LeaveRequest leaveRequest) {
-        // TODO: remove me logic
+        //check my routing table to see if leaveRequest exist
+        for (Credential credential : node.getRoutingTable()) {
+            if (credential.equals(leaveRequest.getCredential())) {
+                node.getRoutingTable().remove(credential);
+                break;
+            }
+        }
+        System.out.println(leaveRequest.getCredential().getUsername() + " sent me a LEAVE");
+        printRoutingTable(node.getRoutingTable());
     }
 
 //        @Override
@@ -176,7 +205,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
         System.out.println(msg);
-        String uri = Constant.HTTP + sendCredentials.getIp() + File.pathSeparator + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
+        String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
             System.out.println(result);
@@ -195,7 +224,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void searchOk(SearchResponse searchResponse) {
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
         System.out.println(msg);
-        String uri = Constant.HTTP + searchResponse.getCredential().getIp() + File.pathSeparator + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
+        String uri = Constant.HTTP + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
             System.out.println(result);
