@@ -120,6 +120,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void leave() {
         LeaveRequest leaveRequest = new LeaveRequest(node.getCredential());
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
+        System.out.println(msg);
         try {
             for (Credential neighbourCredential : node.getRoutingTable()) {
                 socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(neighbourCredential.getIp()), neighbourCredential.getPort()));
@@ -142,6 +143,8 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
+        String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
+        System.out.println(msg);
         String uri = Constant.HTTP + sendCredentials.getIp() + File.pathSeparator + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
         System.out.println(result);
@@ -150,11 +153,10 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void searchOk(SearchResponse searchResponse) {
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
-        try {
-            socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(searchResponse.getCredential().getIp()), searchResponse.getCredential().getPort()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println(msg);
+        String uri = Constant.HTTP + searchResponse.getCredential().getIp() + File.pathSeparator + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
+        String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
+        System.out.println(result);
     }
 
     @Override
@@ -208,43 +210,43 @@ public class NodeOpsWS implements NodeOps, Runnable {
             node.setStatTable(new ArrayList<>());
             this.regOk = false;
 
-        } else if (response instanceof SearchRequest) {
-            SearchRequest searchRequest = (SearchRequest) response;
-            triggerSearchRequest(searchRequest);
-
-        } else if (response instanceof SearchResponse) {
-            SearchResponse searchResponse = (SearchResponse) response;
-            if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_NODE_UNREACHABLE) {
-                System.out.println("Failure due to node unreachable\n");
-            } else if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_OTHER) {
-                System.out.println("Some other error\n");
-            } else {
-                System.out.println("--------------------------------------------------------");
-                System.out.println(searchResponse.toString());
-                System.out.println("--------------------------------------------------------");
-            }
-
-        } else if (response instanceof JoinRequest) {
-            joinOk(node.getCredential());
-
-        } else if (response instanceof JoinResponse) {
-            JoinResponse joinResponse = (JoinResponse) response;
-            List<Credential> routingTable = node.getRoutingTable();
-            routingTable.add(joinResponse.getSenderCredential());
-            node.setRoutingTable(routingTable);
-
-        } else if (response instanceof LeaveRequest) {
-            LeaveRequest leaveRequest = (LeaveRequest) response;
-            List<Credential> routingTable = node.getRoutingTable();
-            routingTable.remove(leaveRequest.getCredential());
-            node.setRoutingTable(routingTable);
-
-        } else if (response instanceof LeaveResponse) {
-            //Nothing to do here
-
-        } else if (response instanceof ErrorResponse) {
-            ErrorResponse errorResponse = (ErrorResponse) response;
-            System.out.println(errorResponse.toString());
+//        } else if (response instanceof SearchRequest) {
+//            SearchRequest searchRequest = (SearchRequest) response;
+//            triggerSearchRequest(searchRequest);
+//
+//        } else if (response instanceof SearchResponse) {
+//            SearchResponse searchResponse = (SearchResponse) response;
+//            if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_NODE_UNREACHABLE) {
+//                System.out.println("Failure due to node unreachable\n");
+//            } else if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_OTHER) {
+//                System.out.println("Some other error\n");
+//            } else {
+//                System.out.println("--------------------------------------------------------");
+//                System.out.println(searchResponse.toString());
+//                System.out.println("--------------------------------------------------------");
+//            }
+//
+//        } else if (response instanceof JoinRequest) {
+//            joinOk(node.getCredential());
+//
+//        } else if (response instanceof JoinResponse) {
+//            JoinResponse joinResponse = (JoinResponse) response;
+//            List<Credential> routingTable = node.getRoutingTable();
+//            routingTable.add(joinResponse.getSenderCredential());
+//            node.setRoutingTable(routingTable);
+//
+//        } else if (response instanceof LeaveRequest) {
+//            LeaveRequest leaveRequest = (LeaveRequest) response;
+//            List<Credential> routingTable = node.getRoutingTable();
+//            routingTable.remove(leaveRequest.getCredential());
+//            node.setRoutingTable(routingTable);
+//
+//        } else if (response instanceof LeaveResponse) {
+//            //Nothing to do here
+//
+//        } else if (response instanceof ErrorResponse) {
+//            ErrorResponse errorResponse = (ErrorResponse) response;
+//            System.out.println(errorResponse.toString());
         }
     }
 
