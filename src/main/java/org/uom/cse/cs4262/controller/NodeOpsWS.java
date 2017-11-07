@@ -11,8 +11,12 @@ import org.uom.cse.cs4262.api.message.request.*;
 import org.uom.cse.cs4262.api.message.response.*;
 import org.uom.cse.cs4262.feature.Parser;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +33,6 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     private Node node;
     private DatagramSocket socket;
-    private Thread nodeThread;
     private boolean regOk = false;
 
     RestTemplate restTemplate = new RestTemplate();
@@ -69,7 +72,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        new Thread().start();
+        new Thread(this).start();
     }
 
     @Override
@@ -197,6 +200,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 printRoutingTable(routingTable);
                 //TODO: check whether the received nodes are alive before adding to routing table
                 this.node.setRoutingTable(routingTable);
+                System.setProperty(Constant.SERVER_PORT, String.valueOf(node.getCredential().getPort()));
                 this.regOk = true;
             }
 
@@ -293,62 +297,4 @@ public class NodeOpsWS implements NodeOps, Runnable {
         System.out.println("--------------------------------------------------------");
     }
 
-
-    @Override
-    public String callAPI(String ip, int port, String pattern, String method, String body) {
-        InputStreamReader inputStreamReader = null;
-        OutputStream outputStream = null;
-        BufferedReader bufferedReader = null;
-
-        try {
-            URL url = new URL("http://" + ip + File.pathSeparator + port + File.separator + pattern);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod(method);
-
-            outputStream = conn.getOutputStream();
-            outputStream.write(body.getBytes());
-            outputStream.flush();
-
-            if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-            }
-
-            inputStreamReader = new InputStreamReader((conn.getInputStream()));
-            bufferedReader = new BufferedReader(inputStreamReader);
-
-            String read;
-            String response = "";
-            while ((read = bufferedReader.readLine()) != null) {
-                response += read;
-            }
-
-            conn.disconnect();
-            return response;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (inputStreamReader != null) {
-                try {
-                    inputStreamReader.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
 }

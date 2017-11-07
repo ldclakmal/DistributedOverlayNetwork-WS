@@ -1,6 +1,5 @@
 package org.uom.cse.cs4262.controller;
 
-import com.google.gson.Gson;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -46,6 +45,8 @@ public class BootstrapNode extends SpringBootServletInitializer {
         int nodePort = paramMap.get("-p") != null ? Integer.parseInt(paramMap.get("-p")) : new Random().nextInt(Constant.MAX_PORT_NODE - Constant.MIN_PORT_NODE) + Constant.MIN_PORT_NODE;
         String nodeUsername = paramMap.get("-u") != null ? paramMap.get("-u") : UUID.randomUUID().toString();
 
+        System.setProperty(Constant.SERVER_PORT, String.valueOf(nodePort));
+
         Credential bootstrapCredential = new Credential(bootstrapIp, Constant.BOOTSTRAP_SERVER_PORT, Constant.BOOTSTRAP_SERVER_USERNAME);
         Credential nodeCredential = new Credential(nodeIp, nodePort, nodeUsername);
 
@@ -71,7 +72,6 @@ public class BootstrapNode extends SpringBootServletInitializer {
             nodeGUI.start();
         });
 
-        System.setProperty(Constant.SERVER_PORT, String.valueOf(nodePort));
         SpringApplication.run(BootstrapNode.class, args);
     }
 
@@ -110,8 +110,8 @@ public class BootstrapNode extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
-    public String root(@RequestBody String json) {
-        SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
+    public String root(@RequestBody SearchRequest searchRequest) {
+//        SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
         nodeOpsWS.triggerSearchRequest(searchRequest);
         return "SUCCESS";
     }

@@ -43,6 +43,4 @@ public interface NodeOps {
     void triggerSearchRequest(SearchRequest searchRequest);
 
     void printRoutingTable(List<Credential> routingTable);
-
-    String callAPI(String ip, int port, String pattern, String method, String body);
 }
