@@ -38,6 +38,8 @@ public interface NodeOps {
 
     void searchOk(SearchResponse searchResponse);
 
+    void searchSuccess(SearchResponse searchResponse);
+
     void processResponse(Message response);
 
 //    void error(Credential senderCredential);

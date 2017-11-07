@@ -212,6 +212,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
         System.out.println(msg);
         String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
+        System.out.println(uri);
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
             System.out.println(result);
@@ -244,8 +245,12 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    @Override
+    public void searchSuccess(SearchResponse searchResponse) {
 
-//    @Override
+    }
+
+    //    @Override
 //    public void error(Credential senderCredential) {
 //        ErrorResponse errorResponse = new ErrorResponse();
 //        String msg = errorResponse.getMessageAsString(Constant.Command.ERROR);
