@@ -28,10 +28,6 @@ public class Node {
     private HashMap<String, ArrayList<String>> displayTable;
     private List<QueryRecord> queryTable;
 
-    private int receivedRequestCount;
-    private int forwardedRequestCount;
-    private int answeredResponseCount;
-    private int searchedRequestCount;
     private float requestSuccessRatio;
     private float avgLatency;
     private float avgHopCount;
@@ -50,10 +46,6 @@ public class Node {
         this.displayTable = displayTable;
         this.queryTable = queryTable;
 
-        receivedRequestCount = 0;
-        forwardedRequestCount = 0;
-        answeredResponseCount = 0;
-        searchedRequestCount = 0;
         requestSuccessRatio = 0;
         avgLatency = 0;
         avgHopCount = 0;
@@ -145,38 +137,6 @@ public class Node {
 
     public void setQueryTable(List<QueryRecord> queryTable) {
         this.queryTable = queryTable;
-    }
-
-    public int getReceivedRequestCount() {
-        return receivedRequestCount;
-    }
-
-    public void setReceivedRequestCount(int receivedRequestCount) {
-        this.receivedRequestCount = receivedRequestCount;
-    }
-
-    public int getForwardedRequestCount() {
-        return forwardedRequestCount;
-    }
-
-    public void setForwardedRequestCount(int forwardedRequestCount) {
-        this.forwardedRequestCount = forwardedRequestCount;
-    }
-
-    public int getAnsweredResponseCount() {
-        return answeredResponseCount;
-    }
-
-    public void setAnsweredResponseCount(int answeredResponseCount) {
-        this.answeredResponseCount = answeredResponseCount;
-    }
-
-    public int getSearchedRequestCount() {
-        return searchedRequestCount;
-    }
-
-    public void setSearchedRequestCount(int searchedRequestCount) {
-        this.searchedRequestCount = searchedRequestCount;
     }
 
     public float getRequestSuccessRatio() {
