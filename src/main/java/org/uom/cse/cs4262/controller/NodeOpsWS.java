@@ -117,9 +117,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
         try {
             result = restTemplate.postForObject(uri, new Gson().toJson(joinRequest), String.class);
             System.out.println(result);
-        }catch (ResourceAccessException exception){
+        } catch (ResourceAccessException exception) {
             //connection refused to the api end point
-            if (node.getRoutingTable().contains(neighbourCredential)){
+            if (node.getRoutingTable().contains(neighbourCredential)) {
                 node.getRoutingTable().remove(neighbourCredential);
                 System.out.println(neighbourCredential.getIp() + "node is not available. So it removed from routing table.");
             }
@@ -174,7 +174,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             try {
                 String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
                 System.out.println(result);
-            }catch (ResourceAccessException exception){
+            } catch (ResourceAccessException exception) {
                 //connection refused to the api end point
             }
         }
@@ -217,9 +217,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
             System.out.println(result);
-        }catch (ResourceAccessException exception){
+        } catch (ResourceAccessException exception) {
             //connection refused to the api end point
-            if (node.getRoutingTable().contains(sendCredentials)){
+            if (node.getRoutingTable().contains(sendCredentials)) {
                 node.getRoutingTable().remove(sendCredentials);
                 System.out.println(sendCredentials.getIp() + "node is not available and removed from routing table.");
             }
@@ -236,9 +236,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
             System.out.println(result);
-        }catch (ResourceAccessException exception){
+        } catch (ResourceAccessException exception) {
             //connection refused to the api end point
-            if (node.getRoutingTable().contains(searchResponse.getCredential())){
+            if (node.getRoutingTable().contains(searchResponse.getCredential())) {
                 node.getRoutingTable().remove(searchResponse.getCredential());
                 System.out.println(searchResponse.getCredential().getIp() + "node is not available and removed from routing table.");
             }
@@ -248,7 +248,10 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void searchSuccess(SearchResponse searchResponse) {
-        //Todo: Add query to stat table and success search table
+        String query = node.getQueryTable().get(searchResponse.getSequenceNo());
+
+//        StatRecord statRecord = new StatRecord(query);
+        //TODO print search result and update stat table and search success table
     }
 
     //    @Override

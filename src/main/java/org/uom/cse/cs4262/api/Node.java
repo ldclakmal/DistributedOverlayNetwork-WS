@@ -23,9 +23,10 @@ public class Node {
     private int forwardedQueryCount;
     private int answeredQueryCount;
     private int searchedQueryCount;
-    private HashMap<SearchRequest, ArrayList<SearchResponse>> searchTable;
+    private HashMap<String, ArrayList<String>> searchTable;
+    private HashMap<Integer, String> queryTable;
 
-    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<SearchRequest, ArrayList<SearchResponse>> searchTable) {
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> searchTable, HashMap<Integer, String> queryTable) {
         this.credential = credential;
         this.fileList = fileList;
         this.routingTable = routingTable;
@@ -36,6 +37,7 @@ public class Node {
         this.answeredQueryCount = answeredQueryCount;
         this.searchedQueryCount = searchedQueryCount;
         this.searchTable = searchTable;
+        this.queryTable = queryTable;
     }
 
     public Credential getCredential() {
@@ -110,11 +112,19 @@ public class Node {
         this.searchedQueryCount = searchedQueryCount;
     }
 
-    public HashMap<SearchRequest, ArrayList<SearchResponse>> getSearchTable() {
+    public HashMap<String, ArrayList<String>> getSearchTable() {
         return searchTable;
     }
 
-    public void setSearchTable(HashMap<SearchRequest, ArrayList<SearchResponse>> searchTable) {
+    public void setSearchTable(HashMap<String, ArrayList<String>> searchTable) {
         this.searchTable = searchTable;
+    }
+
+    public HashMap<Integer, String> getQueryTable() {
+        return queryTable;
+    }
+
+    public void setQueryTable(HashMap<Integer, String> queryTable) {
+        this.queryTable = queryTable;
     }
 }
