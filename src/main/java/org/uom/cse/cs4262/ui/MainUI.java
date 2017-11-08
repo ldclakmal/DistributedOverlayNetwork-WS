@@ -246,6 +246,17 @@ public class MainUI extends javax.swing.JFrame {
         String header[] = new String[]{"Query", "Query Trigged Time", "Result Delivery Time", "Served IP", "Served Port", "Hops", "File List"};
         tblModel.setColumnIdentifiers(header);
         tblStatTable.setModel(tblModel);
+
+        float[] columnWidthPercentage = {16.0f, 15.0f, 15.0f, 12.0f, 12.0f, 5.0f, 25.0f};
+        int tW = tblStatTable.getWidth();
+        TableColumn column;
+        TableColumnModel jTableColumnModel = tblStatTable.getColumnModel();
+        int cantCols = jTableColumnModel.getColumnCount();
+        for (int i = 0; i < cantCols; i++) {
+            column = jTableColumnModel.getColumn(i);
+            int pWidth = Math.round(columnWidthPercentage[i] * tW);
+            column.setPreferredWidth(pWidth);
+        }
     }
 
     private void InitializeSearchResultsTable() {
@@ -401,7 +412,7 @@ public class MainUI extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 182));
 
         tblRoutingTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
                         {null, null, null},
                         {null, null, null},
                         {null, null, null},
@@ -411,7 +422,7 @@ public class MainUI extends javax.swing.JFrame {
                         {null, null, null},
                         {null, null, null}
                 },
-                new String[]{
+                new String [] {
                         "Title 1", "Title 2", "Title 3"
                 }
         ));
@@ -556,15 +567,9 @@ public class MainUI extends javax.swing.JFrame {
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         lstMyFiles.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-
-            public int getSize() {
-                return strings.length;
-            }
-
-            public String getElementAt(int i) {
-                return strings[i];
-            }
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(lstMyFiles);
 
@@ -576,19 +581,19 @@ public class MainUI extends javax.swing.JFrame {
         );
         jPanel7Layout.setVerticalGroup(
                 jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
         );
 
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Stat Table", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         tblStatTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null}
                 },
-                new String[]{
+                new String [] {
                         "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7"
                 }
         ));
@@ -626,10 +631,13 @@ public class MainUI extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                                        .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search Dashboard", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
@@ -654,13 +662,13 @@ public class MainUI extends javax.swing.JFrame {
         });
 
         tblSearchResults.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
                         {null, null},
                         {null, null},
                         {null, null},
                         {null, null}
                 },
-                new String[]{
+                new String [] {
                         "Title 1", "Title 2"
                 }
         ));
@@ -725,7 +733,7 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap())
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{jLabel15, lblReceivedRequestCount});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel15, lblReceivedRequestCount});
 
         lblForwardRequestCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblForwardRequestCount.setText("0");
@@ -934,10 +942,10 @@ public class MainUI extends javax.swing.JFrame {
         jPanel13.setPreferredSize(new java.awt.Dimension(484, 100));
 
         tblLog.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
 
                 },
-                new String[]{
+                new String [] {
                         "Title 1"
                 }
         ));
