@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * @author Chandu Herath
@@ -62,7 +63,6 @@ public class MainUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("update log");
                     updateLog();
                     try {
                         Thread.sleep(1000);
@@ -1046,7 +1046,7 @@ public class MainUI extends javax.swing.JFrame {
             int newLogCount = logList.size() - currentLogCount;
             List<String> newLogs = logList.subList(logList.size() - newLogCount, logList.size());
             for (String newLog : newLogs) {
-                ((DefaultListModel) lstLog.getModel()).addElement(newLog);
+
             }
 
             //update self variables
