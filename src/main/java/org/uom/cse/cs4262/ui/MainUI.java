@@ -7,7 +7,8 @@ package org.uom.cse.cs4262.ui;
 
 import org.uom.cse.cs4262.controller.NodeOpsWS;
 
-import javax.swing.*;
+import java.awt.Color;
+import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -25,110 +26,7 @@ public class MainUI extends javax.swing.JFrame {
     private NodeOpsWS nodeOpsWS;
 
     private int sequenceNo;
-    // Variables declaration - do not modify
-    private javax.swing.JMenuItem advLeave;
-    private javax.swing.JMenuItem advRegister;
-    private javax.swing.JMenuItem advUnregister;
-    private javax.swing.JButton btnStart;
-    private javax.swing.JButton btnStop;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel5;
 
-    //    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).logMe(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).logMe(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).logMe(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).logMe(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new MainUI().setVisible(true);
-//            }
-//        });
-//    }
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel19;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel22;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lblAnsweredResponceCount;
-    private javax.swing.JLabel lblAvgLatency;
-    private javax.swing.JLabel lblAvgThroughputOnHops;
-    private javax.swing.JLabel lblAvgThroughputOnTime;
-    private javax.swing.JLabel lblForwardRequestCount;
-    private javax.swing.JLabel lblReceivedRequestCount;
-    private javax.swing.JLabel lblRequestSuccessRatio;
-    private javax.swing.JLabel lblSearchRequestCount;
-    private javax.swing.JList<String> lstLog;
-    private javax.swing.JList<String> lstMyFiles;
-    private javax.swing.JTable tblRoutingTable;
-    private javax.swing.JTable tblSearchResults;
-    private javax.swing.JTable tblStatTable;
-    private javax.swing.JTextField txtBS_IP;
-    private javax.swing.JTextField txtBS_PORT;
-    private javax.swing.JTextField txtMyIP;
-    private javax.swing.JTextField txtMyPort;
-    private javax.swing.JTextField txtSearchFile;
-    private javax.swing.JTextField txtUsername;
     public MainUI() {
         initComponents();
         initializeRoutingTable();
@@ -136,8 +34,9 @@ public class MainUI extends javax.swing.JFrame {
         InitializeSearchResultsTable();
         initializeMyFileList();
         initializeLog();
-        txtSearchFile.setEnabled(false);
     }
+
+
     public MainUI(NodeOpsWS nodeOpsWS) {
         initComponents();
         this.nodeOpsWS = nodeOpsWS;
@@ -204,8 +103,7 @@ public class MainUI extends javax.swing.JFrame {
         lblForwardRequestCount.setText("0");
         lblAnsweredResponceCount.setText("0");
         lblSearchRequestCount.setText("0");
-        lblAvgThroughputOnTime.setText("0");
-        lblAvgThroughputOnHops.setText("0");
+        lblAvgHopCountPerSearch.setText("0");
         lblRequestSuccessRatio.setText("0");
         lblAvgLatency.setText("0");
     }
@@ -217,10 +115,9 @@ public class MainUI extends javax.swing.JFrame {
         initializeMyFileList();
         initializeLog();
         resetPerformanceMeasurements();
-        txtSearchFile.setEnabled(false);
     }
 
-    public void setUserDetails() {
+    public void setUserDetails(){
         txtBS_IP.setText(nodeOpsWS.getNode().getBootstrap().getIp());
 //        txtBS_PORT.setText(nodeOpsWS.getNode().getBootstrap().getPort());
         txtMyIP.setText(nodeOpsWS.getNode().getCredential().getIp());
@@ -248,15 +145,16 @@ public class MainUI extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        btnStop = new javax.swing.JButton();
+        btnUnregsiter = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
         txtBS_IP = new javax.swing.JTextField();
         txtMyPort = new javax.swing.JTextField();
-        btnStart = new javax.swing.JButton();
+        btnLeave = new javax.swing.JButton();
         txtMyIP = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         txtBS_PORT = new javax.swing.JTextField();
+        btnStop = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstMyFiles = new javax.swing.JList<>();
@@ -284,11 +182,8 @@ public class MainUI extends javax.swing.JFrame {
         lblSearchRequestCount = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jPanel18 = new javax.swing.JPanel();
-        lblAvgThroughputOnTime = new javax.swing.JLabel();
+        lblAvgHopCountPerSearch = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
-        jPanel19 = new javax.swing.JPanel();
-        lblAvgThroughputOnHops = new javax.swing.JLabel();
-        jLabel36 = new javax.swing.JLabel();
         jPanel20 = new javax.swing.JPanel();
         lblRequestSuccessRatio = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
@@ -299,8 +194,8 @@ public class MainUI extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         lstLog = new javax.swing.JList<>();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        mnuFile = new javax.swing.JMenu();
+        menuItemExit = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         advRegister = new javax.swing.JMenuItem();
         advUnregister = new javax.swing.JMenuItem();
@@ -363,26 +258,26 @@ public class MainUI extends javax.swing.JFrame {
 
         jLabel3.setText("My Port");
 
-        btnStop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnStop.setText("Stop");
-        btnStop.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnStop.setContentAreaFilled(false);
-        btnStop.setOpaque(true);
-        btnStop.addActionListener(new java.awt.event.ActionListener() {
+        btnUnregsiter.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnUnregsiter.setText("Unregister");
+        btnUnregsiter.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnUnregsiter.setContentAreaFilled(false);
+        btnUnregsiter.setOpaque(true);
+        btnUnregsiter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStopActionPerformed(evt);
+                btnUnregsiterActionPerformed(evt);
             }
         });
 
         jLabel1.setText("Bootstarp Server IP");
 
-        btnStart.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnStart.setText("Start");
-        btnStart.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnStart.setContentAreaFilled(false);
-        btnStart.addActionListener(new java.awt.event.ActionListener() {
+        btnLeave.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnLeave.setText("Leave");
+        btnLeave.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnLeave.setContentAreaFilled(false);
+        btnLeave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStartActionPerformed(evt);
+                btnLeaveActionPerformed(evt);
             }
         });
 
@@ -400,6 +295,17 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
+        btnStop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnStop.setText("Stop");
+        btnStop.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnStop.setContentAreaFilled(false);
+        btnStop.setOpaque(true);
+        btnStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -408,10 +314,6 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addGroup(jPanel4Layout.createSequentialGroup()
-                                                        .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGroup(jPanel4Layout.createSequentialGroup()
                                                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                                 .addComponent(jLabel5)
@@ -422,7 +324,13 @@ public class MainUI extends javax.swing.JFrame {
                                                                 .addComponent(txtBS_PORT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addComponent(txtMyIP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addComponent(txtMyPort, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addComponent(txtUsername, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                                .addComponent(txtUsername, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(btnStop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                                                .addComponent(btnUnregsiter, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(btnLeave, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -452,11 +360,13 @@ public class MainUI extends javax.swing.JFrame {
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel4))
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnStop)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnStart)
-                                        .addComponent(btnStop))
-                                .addContainerGap(31, Short.MAX_VALUE))
+                                        .addComponent(btnUnregsiter)
+                                        .addComponent(btnLeave))
+                                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
@@ -709,12 +619,12 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap())
         );
 
-        lblAvgThroughputOnTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblAvgThroughputOnTime.setText("0");
-        lblAvgThroughputOnTime.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        lblAvgThroughputOnTime.setPreferredSize(new java.awt.Dimension(50, 16));
+        lblAvgHopCountPerSearch.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAvgHopCountPerSearch.setText("0");
+        lblAvgHopCountPerSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblAvgHopCountPerSearch.setPreferredSize(new java.awt.Dimension(50, 16));
 
-        jLabel34.setText("Average Throughput Based on Time");
+        jLabel34.setText("Average Hop Count Per Search");
         jLabel34.setPreferredSize(new java.awt.Dimension(119, 16));
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
@@ -725,7 +635,7 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(lblAvgThroughputOnTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblAvgHopCountPerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel18Layout.setVerticalGroup(
@@ -733,35 +643,7 @@ public class MainUI extends javax.swing.JFrame {
                         .addGroup(jPanel18Layout.createSequentialGroup()
                                 .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblAvgThroughputOnTime, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap())
-        );
-
-        lblAvgThroughputOnHops.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblAvgThroughputOnHops.setText("0");
-        lblAvgThroughputOnHops.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        lblAvgThroughputOnHops.setPreferredSize(new java.awt.Dimension(50, 16));
-
-        jLabel36.setText("Average Throughput Based on Hops");
-        jLabel36.setPreferredSize(new java.awt.Dimension(119, 16));
-
-        javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
-        jPanel19.setLayout(jPanel19Layout);
-        jPanel19Layout.setHorizontalGroup(
-                jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel19Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel36, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblAvgThroughputOnHops, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-        );
-        jPanel19Layout.setVerticalGroup(
-                jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel19Layout.createSequentialGroup()
-                                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblAvgThroughputOnHops, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(lblAvgHopCountPerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
 
@@ -833,7 +715,6 @@ public class MainUI extends javax.swing.JFrame {
                                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPanel19, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap(13, Short.MAX_VALUE))
         );
@@ -851,12 +732,10 @@ public class MainUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Log", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
@@ -903,17 +782,17 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap())
         );
 
-        jMenu1.setText("File");
+        mnuFile.setText("File");
 
-        jMenuItem2.setText("Exit");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menuItemExit.setText("Exit");
+        menuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menuItemExitActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        mnuFile.add(menuItemExit);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(mnuFile);
 
         jMenu4.setText("Advance");
 
@@ -926,9 +805,19 @@ public class MainUI extends javax.swing.JFrame {
         jMenu4.add(advRegister);
 
         advUnregister.setText("Unregister");
+        advUnregister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                advUnregisterActionPerformed(evt);
+            }
+        });
         jMenu4.add(advUnregister);
 
         advLeave.setText("Leave");
+        advLeave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                advLeaveActionPerformed(evt);
+            }
+        });
         jMenu4.add(advLeave);
 
         jMenuBar1.add(jMenu4);
@@ -959,7 +848,7 @@ public class MainUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         this.dispose();
     }
@@ -970,6 +859,7 @@ public class MainUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+
     }
 
     private void advRegisterActionPerformed(java.awt.event.ActionEvent evt) {
@@ -980,40 +870,137 @@ public class MainUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnUnregsiterActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-
-        //lock user creadential fields
-        txtBS_IP.setEnabled(false);
-        txtBS_PORT.setEnabled(false);
-        txtMyIP.setEnabled(false);
-        txtMyPort.setEnabled(false);
-        txtUsername.setEnabled(false);
-        //lock search fields
-        txtSearchFile.setEnabled(true);
-    }
-
-    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-
-        //unlock user credential fields
-        txtBS_IP.setEnabled(true);
-        txtBS_PORT.setEnabled(true);
-        txtMyIP.setEnabled(true);
-        txtMyPort.setEnabled(true);
-        txtUsername.setEnabled(true);
-        //lock search fields
-        txtSearchFile.setEnabled(false);
     }
 
     private void txtBS_PORTActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    private void btnLeaveActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void advLeaveActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void advUnregisterActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new MainUI().setVisible(true);
+//            }
+//        });
+//    }
+
     public void start() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             this.setVisible(true);
         });
     }
+
+    // Variables declaration - do not modify
+    private javax.swing.JMenuItem advLeave;
+    private javax.swing.JMenuItem advRegister;
+    private javax.swing.JMenuItem advUnregister;
+    private javax.swing.JButton btnLeave;
+    private javax.swing.JButton btnStop;
+    private javax.swing.JButton btnUnregsiter;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel22;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblAnsweredResponceCount;
+    private javax.swing.JLabel lblAvgHopCountPerSearch;
+    private javax.swing.JLabel lblAvgLatency;
+    private javax.swing.JLabel lblForwardRequestCount;
+    private javax.swing.JLabel lblReceivedRequestCount;
+    private javax.swing.JLabel lblRequestSuccessRatio;
+    private javax.swing.JLabel lblSearchRequestCount;
+    private javax.swing.JList<String> lstLog;
+    private javax.swing.JList<String> lstMyFiles;
+    private javax.swing.JMenuItem menuItemExit;
+    private javax.swing.JMenu mnuFile;
+    private javax.swing.JTable tblRoutingTable;
+    private javax.swing.JTable tblSearchResults;
+    private javax.swing.JTable tblStatTable;
+    private javax.swing.JTextField txtBS_IP;
+    private javax.swing.JTextField txtBS_PORT;
+    private javax.swing.JTextField txtMyIP;
+    private javax.swing.JTextField txtMyPort;
+    private javax.swing.JTextField txtSearchFile;
+    private javax.swing.JTextField txtUsername;
     // End of variables declaration
 }
