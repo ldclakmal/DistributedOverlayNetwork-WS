@@ -397,6 +397,10 @@ public class NodeOpsWS implements NodeOps, Runnable {
     }
 
 
+    /**
+     * @param searchRequest
+     * Make a new search request from local node
+     */
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
         searchRequest.setHops(searchRequest.incHops());
@@ -416,6 +420,10 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+
+    /**
+     * Check a search request from neighbour node and pass if needed
+     */
     @Override
     public void passSearchRequest(SearchRequest searchRequest) {
         if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {

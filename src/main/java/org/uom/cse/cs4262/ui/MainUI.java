@@ -217,9 +217,9 @@ public class MainUI extends javax.swing.JFrame {
 
     public void setUserDetails() {
         txtBS_IP.setText(nodeOpsWS.getNode().getBootstrap().getIp());
-//        txtBS_PORT.setText(nodeOpsWS.getNode().getBootstrap().getPort());
+        txtBS_PORT.setText(String.valueOf(nodeOpsWS.getNode().getBootstrap().getPort()));
         txtMyIP.setText(nodeOpsWS.getNode().getCredential().getIp());
-        txtMyPort.setText(nodeOpsWS.getNode().getCredential().getIp());
+        txtMyPort.setText(String.valueOf(nodeOpsWS.getNode().getCredential().getPort()));
         txtUsername.setText(nodeOpsWS.getNode().getCredential().getUsername());
     }
 
