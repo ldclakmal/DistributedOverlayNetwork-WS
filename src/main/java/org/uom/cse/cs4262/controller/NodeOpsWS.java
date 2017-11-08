@@ -1,6 +1,7 @@
 package org.uom.cse.cs4262.controller;
 
 import com.google.gson.Gson;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.uom.cse.cs4262.api.*;
@@ -169,9 +170,13 @@ public class NodeOpsWS implements NodeOps, Runnable {
             String uri = Constant.HTTP + neighbourCredential.getIp() + ":" + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
             try {
                 String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
-                logMe("Sent LEAVE to my neighbors at " + getCurrentTime());
+                if (result.equals("200")) {
+                    logMe("Neighbor left successfully at " + getCurrentTime());
+                }
             } catch (ResourceAccessException exception) {
                 //connection refused to the api end point
+            } catch (HttpServerErrorException exception){
+                //
             }
         }
     }
@@ -408,6 +413,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //                logMe("Search request from" + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + "is blocked by hop TTL\n");
             }
         }
+        Thread.currentThread().interrupt();
     }
 
     @Override
