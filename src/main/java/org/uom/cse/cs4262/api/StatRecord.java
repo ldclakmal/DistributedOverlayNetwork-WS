@@ -1,6 +1,7 @@
 package org.uom.cse.cs4262.api;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Chamin Wickramarathna
@@ -13,6 +14,24 @@ public class StatRecord {
     private Date deliveryTime;
     private int hopsRequired;
     private Credential servedNode;
+    private List<String> fileList;
+
+    public StatRecord(String searchQuery, Date triggeredTime, Date deliveryTime, int hopsRequired, Credential servedNode, List<String> fileList) {
+        this.searchQuery = searchQuery;
+        this.triggeredTime = triggeredTime;
+        this.deliveryTime = deliveryTime;
+        this.hopsRequired = hopsRequired;
+        this.servedNode = servedNode;
+        this.fileList = fileList;
+    }
+
+    public List<String> getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(List<String> fileList) {
+        this.fileList = fileList;
+    }
 
     public String getSearchQuery() {
         return searchQuery;

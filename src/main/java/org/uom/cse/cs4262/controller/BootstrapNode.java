@@ -59,7 +59,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
         Credential bootstrapCredential = new Credential(bootstrapIp, Constant.BOOTSTRAP_SERVER_PORT, Constant.BOOTSTRAP_SERVER_USERNAME);
         Credential nodeCredential = new Credential(nodeIp, nodePort, nodeUsername);
 
-        Node node = new Node(nodeCredential, createFileList(), new ArrayList<>(), new ArrayList<>(), bootstrapCredential, 0, 0, 0, 0, new HashMap<>());
+        Node node = new Node(nodeCredential, createFileList(), new ArrayList<>(), new ArrayList<>(), bootstrapCredential, 0, 0, 0, 0, new HashMap<>(), new HashMap<>());
 
         nodeOpsWS = new NodeOpsWS(node);
         nodeOpsWS.start();
@@ -143,7 +143,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/searchok", method = RequestMethod.POST)
     @ResponseBody
-    public String searchok(@RequestBody String json) {
+    public String searchOk(@RequestBody String json) {
         System.out.println("Search OK api end point triggered");
         SearchResponse searchResponse = new Gson().fromJson(json, SearchResponse.class);
         nodeOpsWS.searchSuccess(searchResponse);
