@@ -1068,27 +1068,26 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
-
-        btnSearch.setName("SEARCHING");
         String query = txtSearchFile.getText().trim();
-        nodeOpsWS.logMe("Started searching for \"" + query + "\"...");
-        SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), query, 0);
-        List<String> mySearchResults = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
-        if (!nodeOpsWS.getNode().getDisplayTable().containsKey(query)) {
-            nodeOpsWS.getNode().getDisplayTable().put(query, new ArrayList<>());
-        }
-        if (nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())) {
-            nodeOpsWS.logMe("Exactly matching file is locally available!");
-        } else {
-            if (!mySearchResults.isEmpty()) {
-                nodeOpsWS.logMe("Partially matching file is locally available!");
-                nodeOpsWS.getNode().getDisplayTable().get(query).addAll(mySearchResults);
+        if (query.isEmpty()) {
+            nodeOpsWS.logMe("Started searching for \"" + query + "\"...");
+            SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), query, 0);
+            List<String> mySearchResults = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
+            if (!nodeOpsWS.getNode().getDisplayTable().containsKey(query)) {
+                nodeOpsWS.getNode().getDisplayTable().put(query, new ArrayList<>());
             }
-            nodeOpsWS.triggerSearchRequest(searchRequest);
-            updateSearchTable();
+            if (nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())) {
+                nodeOpsWS.logMe("Exactly matching file is locally available!");
+            } else {
+                if (!mySearchResults.isEmpty()) {
+                    nodeOpsWS.logMe("Partially matching file is locally available!");
+                    nodeOpsWS.getNode().getDisplayTable().get(query).addAll(mySearchResults);
+                }
+                nodeOpsWS.triggerSearchRequest(searchRequest);
+                updateSearchTable();
+            }
+            txtSearchFile.setText("");
         }
-        txtSearchFile.setText("");
-        btnSearch.setName("Search");
     }
 
     private void advRegisterActionPerformed(java.awt.event.ActionEvent evt) {
