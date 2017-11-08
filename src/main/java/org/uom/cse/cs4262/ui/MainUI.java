@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -203,6 +205,13 @@ public class MainUI extends javax.swing.JFrame {
 
         }).start();
 
+
+        tblLog.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int lastIndex = tblLog.getRowCount() - 1;
+                tblLog.changeSelection(lastIndex, 0, false, false);
+            }
+        });
     }
 
     private void initializeRoutingTable() {
