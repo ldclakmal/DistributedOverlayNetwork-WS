@@ -132,9 +132,8 @@ public class BootstrapNode extends SpringBootServletInitializer {
     public String search(@RequestBody String json) {
         System.out.println("Search api end point triggered");
         SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
-//        new Thread(() -> nodeOpsWS.triggerSearchRequest(searchRequest));
         Executors.newScheduledThreadPool(1).schedule(
-                () -> nodeOpsWS.triggerSearchRequest(searchRequest),
+                () -> nodeOpsWS.passSearchRequest(searchRequest),
                 10, TimeUnit.MILLISECONDS
         );
         System.out.println("End of search aPi");

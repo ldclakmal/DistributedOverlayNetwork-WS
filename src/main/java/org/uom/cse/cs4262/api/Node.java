@@ -49,6 +49,14 @@ public class Node {
         this.searchedQueryCount = searchedQueryCount;
         this.displayTable = displayTable;
         this.queryTable = queryTable;
+
+        receivedRequestCount = 0;
+        forwardedRequestCount = 0;
+        answeredResponseCount = 0;
+        searchedRequestCount = 0;
+        requestSuccessRatio = 0;
+        avgLatency = 0;
+        avgHopCount = 0;
     }
 
     public Credential getCredential() {
