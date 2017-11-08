@@ -103,8 +103,7 @@ public class NodeGUI {
                 List<String> searchResult = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
                 if (!searchResult.isEmpty()) {
                     System.out.println("File is locally available");
-                }
-                else {
+                } else {
                     System.out.println("xx");
                     nodeOpsWS.triggerSearchRequest(searchRequest);
                 }

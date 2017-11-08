@@ -1,8 +1,5 @@
 package org.uom.cse.cs4262.api;
 
-import org.uom.cse.cs4262.api.message.request.SearchRequest;
-import org.uom.cse.cs4262.api.message.response.SearchResponse;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +20,10 @@ public class Node {
     private int forwardedQueryCount;
     private int answeredQueryCount;
     private int searchedQueryCount;
-    private HashMap<String, ArrayList<String>> searchTable;
-    private HashMap<Integer, String> queryTable;
+    private HashMap<String, ArrayList<String>> displayTable;
+    private List<QueryRecord> queryTable;
 
-    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> searchTable, HashMap<Integer, String> queryTable) {
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> displayTable, List<QueryRecord> queryTable) {
         this.credential = credential;
         this.fileList = fileList;
         this.routingTable = routingTable;
@@ -36,7 +33,7 @@ public class Node {
         this.forwardedQueryCount = forwardedQueryCount;
         this.answeredQueryCount = answeredQueryCount;
         this.searchedQueryCount = searchedQueryCount;
-        this.searchTable = searchTable;
+        this.displayTable = displayTable;
         this.queryTable = queryTable;
     }
 
@@ -112,19 +109,19 @@ public class Node {
         this.searchedQueryCount = searchedQueryCount;
     }
 
-    public HashMap<String, ArrayList<String>> getSearchTable() {
-        return searchTable;
+    public HashMap<String, ArrayList<String>> getDisplayTable() {
+        return displayTable;
     }
 
-    public void setSearchTable(HashMap<String, ArrayList<String>> searchTable) {
-        this.searchTable = searchTable;
+    public void setDisplayTable(HashMap<String, ArrayList<String>> displayTable) {
+        this.displayTable = displayTable;
     }
 
-    public HashMap<Integer, String> getQueryTable() {
+    public List<QueryRecord> getQueryTable() {
         return queryTable;
     }
 
-    public void setQueryTable(HashMap<Integer, String> queryTable) {
+    public void setQueryTable(List<QueryRecord> queryTable) {
         this.queryTable = queryTable;
     }
 }
