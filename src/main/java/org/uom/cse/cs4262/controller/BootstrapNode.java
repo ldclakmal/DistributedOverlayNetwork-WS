@@ -107,7 +107,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
         fileList.add("Twilight");
         fileList.add("Windows 8");
         fileList.add("Mission Impossible");
-        fileList.add("Turn Up The_Music");
+        fileList.add("Turn Up The Music");
         fileList.add("Super Mario");
         fileList.add("American Pickers");
         fileList.add("Microsoft Office 2010");
