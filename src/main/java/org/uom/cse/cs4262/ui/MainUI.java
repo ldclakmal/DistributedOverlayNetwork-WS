@@ -57,7 +57,7 @@ public class MainUI extends javax.swing.JFrame {
 
     private void InitializeStatTable(){
         DefaultTableModel tblModel = (DefaultTableModel) tblStatTable.getModel();
-        String header[] = new String[] { "Query", "Query Trigged Time", "Result Delivery Time","Served IP","Served Port","Hops Registered"};
+        String header[] = new String[] { "Query", "Query Trigged Time", "Result Delivery Time","Served IP","Served Port","Hops","File List" };
         tblModel.setColumnIdentifiers(header);
         tblStatTable.setModel(tblModel);
     }
@@ -349,13 +349,13 @@ public class MainUI extends javax.swing.JFrame {
 
         tblStatTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
-                        {null, null, null, null, null, null},
-                        {null, null, null, null, null, null},
-                        {null, null, null, null, null, null},
-                        {null, null, null, null, null, null}
+                        {null, null, null, null, null, null, null},
+                        {null, null, null, null, null, null, null},
+                        {null, null, null, null, null, null, null},
+                        {null, null, null, null, null, null, null}
                 },
                 new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
+                        "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7"
                 }
         ));
         tblStatTable.setShowHorizontalLines(false);

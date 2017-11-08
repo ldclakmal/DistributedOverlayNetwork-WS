@@ -78,7 +78,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
         }
         javax.swing.SwingUtilities.invokeLater(() -> {
             try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+                UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
