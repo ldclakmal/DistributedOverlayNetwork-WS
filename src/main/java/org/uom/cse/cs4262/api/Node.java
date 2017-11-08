@@ -4,8 +4,10 @@ import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.api.message.response.SearchResponse;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Chamin Wickramarathna
@@ -191,5 +193,22 @@ public class Node {
 
     public void setAvgHopCount(float avgHopCount) {
         this.avgHopCount = avgHopCount;
+    }
+
+    public float getAverageLatency(){
+        long totalDifference = 0;
+        for(int i=0; i<this.statTable.size();i++){
+            StatRecord statRecord = this.statTable.get(i);
+            totalDifference += getDateDiff(statRecord.getTriggeredTime(),statRecord.getDeliveryTime());
+        }
+        avgLatency = totalDifference/searchedQueryCount;
+        return avgLatency;
+    }
+
+    public long getDateDiff(Date date1, Date date2) {
+        //time difference will return in seconds
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
     }
 }
