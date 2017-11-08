@@ -6,6 +6,7 @@
 package org.uom.cse.cs4262.ui;
 
 import org.uom.cse.cs4262.api.Credential;
+import org.uom.cse.cs4262.api.StatRecord;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.controller.NodeOpsWS;
 
@@ -67,6 +68,7 @@ public class MainUI extends javax.swing.JFrame {
                 while (true) {
                     updateLog();
                     updateRoutingTable();
+                    UpdateStatTable();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -1111,5 +1113,21 @@ public class MainUI extends javax.swing.JFrame {
         lblRequestSuccessRatio.setText(String.valueOf(nodeOpsWS.getNode().calculateRequestSuccessRatio()));
         lblAvgLatency.setText(String.valueOf(nodeOpsWS.getNode().calculateAverageLatency()));
     }
+
+    public void UpdateStatTable(){
+        DefaultTableModel tableModel = (DefaultTableModel) tblStatTable.getModel();
+        tableModel.getDataVector().removeAllElements();
+        tableModel.fireTableDataChanged();
+        List<StatRecord> statTable = nodeOpsWS.getNode().getStatTable();
+        for(int i=0; i<statTable.size();i++){
+            StatRecord row = statTable.get(i);
+            String filelist = "";
+            for (int j=0; j<row.getFileList().size();j++){
+                filelist += ", " + row.getFileList().get(j);
+            }
+            tableModel.addRow(new Object[]{row.getSearchQuery(),row.getTriggeredTime(),row.getDeliveryTime(),row.getServedNode().getIp(),row.getServedNode().getPort(),row.getHopsRequired(),filelist});
+        }
+    }
+
 
 }
