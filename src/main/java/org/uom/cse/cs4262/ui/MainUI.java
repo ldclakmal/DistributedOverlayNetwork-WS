@@ -78,6 +78,25 @@ public class MainUI extends javax.swing.JFrame {
 
         }).start();
 
+        //Thread to update performance measurements
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while (true) {
+                    System.out.println("update performance measurements");
+                    updatePerformanceMeasurements();
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+        }).start();
+
     }
 
     private void initializeRoutingTable() {
@@ -1081,6 +1100,16 @@ public class MainUI extends javax.swing.JFrame {
             currentLogCount = logList.size();
             nodeOpsWS.setLogFlag(false);
         }
+    }
+
+    public void updatePerformanceMeasurements(){
+        lblReceivedRequestCount.setText(String.valueOf(nodeOpsWS.getNode().getReceivedQueryCount()));
+        lblForwardRequestCount.setText(String.valueOf(nodeOpsWS.getNode().getForwardedQueryCount()));
+        lblAnsweredResponceCount.setText(String.valueOf(nodeOpsWS.getNode().getAnsweredQueryCount()));
+        lblSearchRequestCount.setText(String.valueOf(nodeOpsWS.getNode().getSearchedQueryCount()));
+        lblAvgHopCountPerSearch.setText(String.valueOf(nodeOpsWS.getNode().calculateAverageHopCountPerSearch()));
+        lblRequestSuccessRatio.setText(String.valueOf(nodeOpsWS.getNode().calculateRequestSuccessRatio()));
+        lblAvgLatency.setText(String.valueOf(nodeOpsWS.getNode().calculateAverageLatency()));
     }
 
 }
