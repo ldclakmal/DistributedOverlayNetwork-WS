@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -88,7 +90,6 @@ public class MainUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("update performance measurements");
                     updatePerformanceMeasurements();
                     try {
                         Thread.sleep(2000);
@@ -889,6 +890,14 @@ public class MainUI extends javax.swing.JFrame {
                 advLeaveActionPerformed(evt);
             }
         });
+
+        tblLog.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int lastIndex = tblLog.getRowCount() - 1;
+                tblLog.changeSelection(lastIndex, 0, false, false);
+            }
+        });
+
         jMenu4.add(advLeave);
 
         jMenuBar1.add(jMenu4);
@@ -1161,7 +1170,7 @@ public class MainUI extends javax.swing.JFrame {
             StatRecord row = statTable.get(i);
             String filelist = "";
             for (int j = 0; j < row.getFileList().size(); j++) {
-                filelist += ", " + row.getFileList().get(j);
+                filelist += row.getFileList().get(j) + ", ";
             }
             tableModel.addRow(new Object[]{row.getSearchQuery(),row.getTriggeredTime(),row.getDeliveryTime(),row.getServedNode().getIp(),row.getServedNode().getPort(),row.getHopsRequired(),filelist});
         }

@@ -246,6 +246,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void searchOk(SearchResponse searchResponse) {
         node.incForwardedQueryCount();
+        node.incAnsweredQueryCount();
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
         logMe(msg);
         String uri = Constant.HTTP + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
@@ -282,9 +283,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
             List<String> fileList = searchResponse.getFileList();
 
             StatRecord statRecord = new StatRecord(query, queryRecord.getTriggeredTime(), new Date(), searchResponse.getHops(), searchResponse.getCredential(), fileList);
-            node.getStatTable().add(statRecord);
-
-            node.getDisplayTable().get(query).addAll(fileList);
+            boolean isFileAlreadyReceived=false;
+            for(StatRecord sr : node.getStatTable()){
+                if(sr.getSearchQuery().equals(statRecord.getSearchQuery()) && sr.getServedNode().equals(statRecord.getServedNode())){
+                    isFileAlreadyReceived=true;
+                    break;
+                }
+            }
+            if(!isFileAlreadyReceived){
+                node.getStatTable().add(statRecord);
+                node.getDisplayTable().get(query).addAll(fileList);
+            }
             logMe("\"" + statRecord.getSearchQuery() + "\" found at: " + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + "\nStatTable is updated.");
         }
     }
@@ -436,7 +445,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void passSearchRequest(SearchRequest searchRequest) {
-        node.incForwardedQueryCount();
+
 //        if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
         if (searchRequest.getCredential().equals(node.getCredential())) {
             logMe("Query LOOP eliminated ----------------------------");
@@ -457,6 +466,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 for (StatRecord statRecord : StatTableSearchResult) {
                     if (statRecord.getSearchQuery().equals(searchRequest.getFileName())) {
                         Credential credential = statRecord.getServedNode();
+                        node.incForwardedQueryCount();
                         search(searchRequest, credential);
                         logMe("Pass SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
                     }
@@ -464,6 +474,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 //TODO: Wait and see for stat members rather flooding whole routing table
                 // Send search request to routing table members
                 for (Credential credential : node.getRoutingTable()) {
+                    node.incForwardedQueryCount();
                     search(searchRequest, credential);
                     logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }
