@@ -282,9 +282,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
             List<String> fileList = searchResponse.getFileList();
 
             StatRecord statRecord = new StatRecord(query, queryRecord.getTriggeredTime(), new Date(), searchResponse.getHops(), searchResponse.getCredential(), fileList);
-            node.getStatTable().add(statRecord);
-
-            node.getDisplayTable().get(query).addAll(fileList);
+            boolean isFileAlreadyReceived=false;
+            for(StatRecord sr : node.getStatTable()){
+                if(sr.getSearchQuery().equals(statRecord.getSearchQuery()) && sr.getServedNode().equals(statRecord.getServedNode())){
+                    isFileAlreadyReceived=true;
+                    break;
+                }
+            }
+            if(!isFileAlreadyReceived){
+                node.getStatTable().add(statRecord);
+                node.getDisplayTable().get(query).addAll(fileList);
+            }
             logMe("\"" + statRecord.getSearchQuery() + "\" found at: " + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + "\nStatTable is updated.");
         }
     }
