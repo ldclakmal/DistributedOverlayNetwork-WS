@@ -18,6 +18,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -247,10 +248,19 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void searchSuccess(SearchResponse searchResponse) {
-        String query = node.getQueryTable().get(searchResponse.getSequenceNo());
+        //update statTable
+        int sequenceNo = searchResponse.getSequenceNo();
+        StatRecord statRecord = node.getStatTable().get(sequenceNo);
+        if (statRecord != null) {
+            statRecord.setDeliveryTime(new Date());
+            statRecord.setHopsRequired(searchResponse.getHops());
+            statRecord.setServedNode(searchResponse.getCredential());
+            statRecord.setFileList(searchResponse.getFileList());
+            node.getStatTable().add(sequenceNo, statRecord);
 
-//        StatRecord statRecord = new StatRecord(query);
-        //TODO print search result and update stat table and search success table
+            System.out.println("\"" + statRecord.getSearchQuery() + "\" found at: " + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + "\nStatTable is updated.");
+
+        }
     }
 
     //    @Override
