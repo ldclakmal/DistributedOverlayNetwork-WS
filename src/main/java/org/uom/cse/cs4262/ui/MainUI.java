@@ -45,6 +45,15 @@ public class MainUI extends javax.swing.JFrame {
         InitializeSearchResultsTable();
         initializeMyFileList();
         initializeLog();
+
+        //lock user creadential fields
+        txtBS_IP.setEnabled(false);
+        txtMyIP.setEnabled(false);
+        txtMyPort.setEnabled(false);
+        txtUsername.setEnabled(false);
+        txtSearchFile.setEnabled(false);
+
+        setUserDetails();
     }
 
     private void initializeRoutingTable(){
@@ -106,6 +115,14 @@ public class MainUI extends javax.swing.JFrame {
         initializeMyFileList();
         initializeLog();
         resetPerformanceMeasurements();
+    }
+
+    public void setUserDetails(){
+        txtBS_IP.setText(nodeOpsWS.getNode().getBootstrap().getIp());
+//        txtBS_PORT.setText(nodeOpsWS.getNode().getBootstrap().getPort());
+        txtMyIP.setText(nodeOpsWS.getNode().getCredential().getIp());
+        txtMyPort.setText(nodeOpsWS.getNode().getCredential().getIp());
+        txtUsername.setText(nodeOpsWS.getNode().getCredential().getUsername());
     }
 
     /**
