@@ -143,7 +143,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             node.incReceivedQueryCount();
             node.getRoutingTable().add(neighbourCredential);
         }
-        printRoutingTable(node.getRoutingTable());
+//        printRoutingTable(node.getRoutingTable());
     }
 
     /**
@@ -159,7 +159,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             node.getRoutingTable().add(joinRequest.getCredential());
         }
 
-        printRoutingTable(node.getRoutingTable());
+//        printRoutingTable(node.getRoutingTable());
     }
 
 //    @Override
@@ -208,7 +208,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //        }
         removeFromStatTable(leaveRequest.getCredential());
         logMe(leaveRequest.getCredential().getUsername() + " sent me a LEAVE");
-        printRoutingTable(node.getRoutingTable());
+//        printRoutingTable(node.getRoutingTable());
     }
 
 //        @Override
@@ -383,7 +383,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public List<String> checkFilesInFileList(String fileName, List<String> fileList) {
-        Pattern pattern = Pattern.compile(fileName);
+        Pattern pattern = Pattern.compile(fileName, Pattern.CASE_INSENSITIVE + Pattern.LITERAL);
         return fileList.stream().filter(pattern.asPredicate()).collect(Collectors.toList());
     }
 
@@ -405,7 +405,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
-        logMe("Search triggered!!!!!");
+        logMe("Search triggered!");
         node.incSearchedQueryCount();
         String query = searchRequest.getFileName();
         if (!node.getDisplayTable().containsKey(query)) {
@@ -416,9 +416,11 @@ public class NodeOpsWS implements NodeOps, Runnable {
         List<StatRecord> StatTableSearchResult = checkFilesInStatTable(query, node.getStatTable());
         // Send search request to stat table members
         for (StatRecord statRecord : StatTableSearchResult) {
-            Credential credential = statRecord.getServedNode();
-            search(searchRequest, credential);
-            logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+            if (statRecord.getSearchQuery().equals(searchRequest.getFileName())) {
+                Credential credential = statRecord.getServedNode();
+                search(searchRequest, credential);
+                logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+            }
         }
         //TODO: Wait and see for stat members rather flooding whole routing table
         // Send search request to routing table members
@@ -453,9 +455,11 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
                 // Send search request to stat table members
                 for (StatRecord statRecord : StatTableSearchResult) {
-                    Credential credential = statRecord.getServedNode();
-                    search(searchRequest, credential);
-                    logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+                    if (statRecord.getSearchQuery().equals(searchRequest.getFileName())) {
+                        Credential credential = statRecord.getServedNode();
+                        search(searchRequest, credential);
+                        logMe("Pass SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+                    }
                 }
                 //TODO: Wait and see for stat members rather flooding whole routing table
                 // Send search request to routing table members
