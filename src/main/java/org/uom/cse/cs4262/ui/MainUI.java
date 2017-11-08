@@ -1153,8 +1153,10 @@ public class MainUI extends javax.swing.JFrame {
 
     public void UpdateStatTable(){
         DefaultTableModel tableModel = (DefaultTableModel) tblStatTable.getModel();
-        tableModel.getDataVector().removeAllElements();
-        tableModel.fireTableDataChanged();
+        //remove previous records
+        for (int i = tableModel.getRowCount() - 1; i >= 0; i--) {
+            tableModel.removeRow(i);
+        }
         List<StatRecord> statTable = nodeOpsWS.getNode().getStatTable();
         for(int i=0; i<statTable.size();i++){
             StatRecord row = statTable.get(i);
