@@ -58,5 +58,5 @@ public interface NodeOps {
 
     void removeFromStatTable(Credential credential);
 
-    void log(String log);
+    void logMe(String log);
 }

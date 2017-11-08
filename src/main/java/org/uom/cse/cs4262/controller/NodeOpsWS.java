@@ -62,7 +62,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public void run() {
-        log("Server " + this.node.getCredential().getUsername() + " created at " + this.node.getCredential().getPort() + ". Waiting for incoming data...\n");
+        logMe("Server " + this.node.getCredential().getUsername() + " created at " + this.node.getCredential().getPort() + ". Waiting for incoming data...\n");
         byte buffer[];
         DatagramPacket datagramPacket;
         while (true) {
@@ -95,7 +95,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void register() {
         RegisterRequest registerRequest = new RegisterRequest(node.getCredential());
         String msg = registerRequest.getMessageAsString(Constant.Command.REG);
-        log(msg);
+        logMe(msg);
         try {
             socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(node.getBootstrap().getIp()), node.getBootstrap().getPort()));
         } catch (IOException e) {
@@ -108,7 +108,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void unRegister() {
         UnregisterRequest unregisterRequest = new UnregisterRequest(node.getCredential());
         String msg = unregisterRequest.getMessageAsString(Constant.Command.UNREG);
-        log(msg);
+        logMe(msg);
         try {
             socket.send(new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName(node.getBootstrap().getIp()), node.getBootstrap().getPort()));
         } catch (IOException e) {
@@ -124,18 +124,18 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void join(Credential neighbourCredential) {
         JoinRequest joinRequest = new JoinRequest(node.getCredential());
         String msg = joinRequest.getMessageAsString(Constant.Command.JOIN);
-        log(msg);
+        logMe(msg);
         String uri = Constant.HTTP + neighbourCredential.getIp() + ":" + neighbourCredential.getPort() + Constant.UrlPattern.JOIN;
-        log(uri);
+        logMe(uri);
         String result = "";
         try {
             result = restTemplate.postForObject(uri, new Gson().toJson(joinRequest), String.class);
-            log(result);
+            logMe(result);
         } catch (ResourceAccessException exception) {
             //connection refused to the api end point
             if (node.getRoutingTable().contains(neighbourCredential)) {
                 node.getRoutingTable().remove(neighbourCredential);
-                log(neighbourCredential.getIp() + "node is not available. So it removed from routing table.");
+                logMe(neighbourCredential.getIp() + "node is not available. So it removed from routing table.");
             }
             //Todo: Remove this neighbour from stat table
         }
@@ -150,10 +150,10 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void joinMe(JoinRequest joinRequest) {
-        log(joinRequest.getCredential().getUsername() + " sent me a JOIN");
+        logMe(joinRequest.getCredential().getUsername() + " sent me a JOIN");
         //check if already exist
         if (node.getRoutingTable().contains(joinRequest.getCredential())) {
-            log("But he's already in...");
+            logMe("But he's already in...");
         } else {
             node.getRoutingTable().add(joinRequest.getCredential());
         }
@@ -182,12 +182,12 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void leave() {
         LeaveRequest leaveRequest = new LeaveRequest(node.getCredential());
         String msg = leaveRequest.getMessageAsString(Constant.Command.LEAVE);
-        log(msg);
+        logMe(msg);
         for (Credential neighbourCredential : node.getRoutingTable()) {
             String uri = Constant.HTTP + neighbourCredential.getIp() + ":" + neighbourCredential.getPort() + Constant.UrlPattern.LEAVE;
             try {
                 String result = restTemplate.postForObject(uri, new Gson().toJson(leaveRequest), String.class);
-                log(result);
+                logMe(result);
             } catch (ResourceAccessException exception) {
                 //connection refused to the api end point
             }
@@ -206,7 +206,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
 //        }
         removeFromStatTable(leaveRequest.getCredential());
-        log(leaveRequest.getCredential().getUsername() + " sent me a LEAVE");
+        logMe(leaveRequest.getCredential().getUsername() + " sent me a LEAVE");
         printRoutingTable(node.getRoutingTable());
     }
 
@@ -225,17 +225,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void search(SearchRequest searchRequest, Credential sendCredentials) {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
-        log(msg);
+        logMe(msg);
         String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
-        log(uri);
+        logMe(uri);
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
-            log(result);
+            logMe(result);
         } catch (ResourceAccessException exception) {
             //connection refused to the api end point
             if (node.getRoutingTable().contains(sendCredentials)) {
                 node.getRoutingTable().remove(sendCredentials);
-                log(sendCredentials.getIp() + "node is not available and removed from routing table.");
+                logMe(sendCredentials.getIp() + "node is not available and removed from routing table.");
             }
             //Todo: Remove this neighbour from stat table
         }
@@ -245,16 +245,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void searchOk(SearchResponse searchResponse) {
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
-        log(msg);
+        logMe(msg);
         String uri = Constant.HTTP + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
-            log(result);
+            logMe(result);
         } catch (ResourceAccessException exception) {
             //connection refused to the api end point
             if (node.getRoutingTable().contains(searchResponse.getCredential())) {
                 node.getRoutingTable().remove(searchResponse.getCredential());
-                log(searchResponse.getCredential().getIp() + "node is not available and removed from routing table.");
+                logMe(searchResponse.getCredential().getIp() + "node is not available and removed from routing table.");
             }
             //Todo: Remove this neighbour from stat table
         }
@@ -279,7 +279,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             node.getStatTable().add(statRecord);
 
             node.getDisplayTable().get(query).addAll(fileList);
-            log("\"" + statRecord.getSearchQuery() + "\" found at: " + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + "\nStatTable is updated.");
+            logMe("\"" + statRecord.getSearchQuery() + "\" found at: " + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + "\nStatTable is updated.");
         }
     }
 
@@ -299,21 +299,21 @@ public class NodeOpsWS implements NodeOps, Runnable {
         if (response instanceof RegisterResponse) {
             RegisterResponse registerResponse = (RegisterResponse) response;
             if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_ALREADY_REGISTERED) {
-                log("Already registered at Bootstrap with same username\n");
+                logMe("Already registered at Bootstrap with same username\n");
                 Credential credential = node.getCredential();
                 credential.setUsername(UUID.randomUUID().toString());
                 node.setCredential(credential);
                 register();
             } else if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_DUPLICATE_IP) {
-                log("Already registered at Bootstrap with same port\n");
+                logMe("Already registered at Bootstrap with same port\n");
                 Credential credential = node.getCredential();
                 credential.setPort(credential.getPort() + 1);
                 node.setCredential(credential);
                 register();
             } else if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_CANNOT_REGISTER) {
-                log("Can’t register. Bootstrap server full. Try again later\n");
+                logMe("Can’t register. Bootstrap server full. Try again later\n");
             } else if (registerResponse.getNoOfNodes() == Constant.Codes.Register.ERROR_COMMAND) {
-                log("Error in command");
+                logMe("Error in command");
             } else {
                 List<Credential> credentialList = registerResponse.getCredentials();
                 for (Credential credential : credentialList) {
@@ -337,13 +337,13 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //        } else if (response instanceof SearchResponse) {
 //            SearchResponse searchResponse = (SearchResponse) response;
 //            if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_NODE_UNREACHABLE) {
-//                System.out.println("Failure due to node unreachable\n");
+//                logMe("Failure due to node unreachable\n");
 //            } else if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_OTHER) {
-//                log("Some other error\n");
+//                logMe("Some other error\n");
 //            } else {
-//                log("--------------------------------------------------------");
-//                log(searchResponse.toString());
-//                log("--------------------------------------------------------");
+//                logMe("--------------------------------------------------------");
+//                logMe(searchResponse.toString());
+//                logMe("--------------------------------------------------------");
 //            }
 //
 //        } else if (response instanceof JoinRequest) {
@@ -366,7 +366,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //
 //        } else if (response instanceof ErrorResponse) {
 //            ErrorResponse errorResponse = (ErrorResponse) response;
-//            log(errorResponse.toString());
+//            logMe(errorResponse.toString());
         }
     }
 
@@ -402,13 +402,13 @@ public class NodeOpsWS implements NodeOps, Runnable {
         for (StatRecord statRecord : StatTableSearchResult) {
             Credential credential = statRecord.getServedNode();
             search(searchRequest, credential);
-            System.out.println("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+            logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
         }
         //TODO: Wait and see for stat members rather flooding whole routing table
         // Send search request to routing table members
         for (Credential credential : node.getRoutingTable()) {
             search(searchRequest, credential);
-            System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+            logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
         }
     }
 
@@ -417,14 +417,14 @@ public class NodeOpsWS implements NodeOps, Runnable {
         if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
             return; // search query loop has eliminated
         }
-        System.out.println("\nTriggered search request for " + searchRequest.getFileName() + "\n");
+        logMe("\nTriggered search request for " + searchRequest.getFileName() + "\n");
         List<String> searchResult = checkFilesInFileList(searchRequest.getFileName(), node.getFileList());
         if (!searchResult.isEmpty()) {
             SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), searchRequest.getCredential(), searchRequest.getHops(), searchResult);
-            System.out.println("Send SEARCHOK response message\n");
+            logMe("Send SEARCHOK response message\n");
             searchOk(searchResponse);
         } else {
-            //System.out.println("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
+            //logMe("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
             if (searchRequest.getHops() <= TTL) {
                 searchRequest.setHops(searchRequest.incHops());
                 List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
@@ -432,29 +432,29 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 for (StatRecord statRecord : StatTableSearchResult) {
                     Credential credential = statRecord.getServedNode();
                     search(searchRequest, credential);
-                    System.out.println("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+                    logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }
                 //TODO: Wait and see for stat members rather flooding whole routing table
                 // Send search request to routing table members
                 for (Credential credential : node.getRoutingTable()) {
                     search(searchRequest, credential);
-                    System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+                    logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }
             } else {
-                System.out.println("Search request from" + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + "is blocked by hop TTL\n");
+                logMe("Search request from" + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + "is blocked by hop TTL\n");
             }
         }
     }
 
     @Override
     public void printRoutingTable(List<Credential> routingTable) {
-        log("Routing table updated as :");
-        log("--------------------------------------------------------");
-        log("IP \t \t \t PORT");
+        logMe("Routing table updated as :");
+        logMe("--------------------------------------------------------");
+        logMe("IP \t \t \t PORT");
         for (Credential credential : routingTable) {
-            log(credential.getIp() + "\t" + credential.getPort());
+            logMe(credential.getIp() + "\t" + credential.getPort());
         }
-        log("--------------------------------------------------------");
+        logMe("--------------------------------------------------------");
     }
 
     @Override
@@ -468,7 +468,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     }
 
     @Override
-    public void log(String log) {
+    public void logMe(String log) {
         this.displayLog.add(log);
         this.logFlag = true;
         System.out.println(log);
