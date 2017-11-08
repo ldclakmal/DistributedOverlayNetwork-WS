@@ -33,7 +33,7 @@ public class Node {
     private float avgHopCount;
 
 
-    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String,ArrayList<String>> displayTable, List<QueryRecord> queryTable) {
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> displayTable, List<QueryRecord> queryTable) {
         this.credential = credential;
         this.fileList = fileList;
         this.routingTable = routingTable;
@@ -99,6 +99,7 @@ public class Node {
         this.receivedQueryCount = receivedQueryCount;
     }
 
+
     public int getForwardedQueryCount() {
         return forwardedQueryCount;
     }
@@ -163,28 +164,28 @@ public class Node {
         this.avgHopCount = avgHopCount;
     }
 
-    public float calculateAverageLatency(){
+    public float calculateAverageLatency() {
         long totalDifference = 0;
-        for(int i=0; i<this.statTable.size();i++){
+        for (int i = 0; i < this.statTable.size(); i++) {
             StatRecord statRecord = this.statTable.get(i);
-            totalDifference += getDateDiff(statRecord.getTriggeredTime(),statRecord.getDeliveryTime());
+            totalDifference += getDateDiff(statRecord.getTriggeredTime(), statRecord.getDeliveryTime());
         }
-        this.setAvgLatency(totalDifference/searchedQueryCount);
+        this.setAvgLatency(totalDifference / searchedQueryCount);
         return this.getAvgLatency();
     }
 
-    public float calculateAverageHopCountPerSearch(){
+    public float calculateAverageHopCountPerSearch() {
         int totalHopCount = 0;
-        for(int i=0; i<this.statTable.size();i++) {
+        for (int i = 0; i < this.statTable.size(); i++) {
             StatRecord statRecord = this.statTable.get(i);
             totalHopCount += statRecord.getHopsRequired();
         }
-        this.setAvgHopCount(totalHopCount/searchedQueryCount);
+        this.setAvgHopCount(totalHopCount / searchedQueryCount);
         return 0.0f;
     }
 
-    public float calculateRequestSuccessRatio(){
-        this.setRequestSuccessRatio(answeredQueryCount/receivedQueryCount);
+    public float calculateRequestSuccessRatio() {
+        this.setRequestSuccessRatio(answeredQueryCount / receivedQueryCount);
         return getRequestSuccessRatio();
     }
 
@@ -192,6 +193,22 @@ public class Node {
         //time difference will return in seconds
         TimeUnit timeUnit = TimeUnit.SECONDS;
         long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    public void incReceivedQueryCount() {
+        this.receivedQueryCount++;
+    }
+
+    public void incForwardedQueryCount() {
+        this.forwardedQueryCount++;
+    }
+
+    public void incAnsweredQueryCount() {
+        this.answeredQueryCount++;
+    }
+
+    public void incSearchedQueryCount() {
+        this.searchedQueryCount++;
     }
 }

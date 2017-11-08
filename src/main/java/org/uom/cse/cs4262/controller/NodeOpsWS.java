@@ -140,6 +140,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             //Todo: Remove this neighbour from stat table
         }
         if (result.equals(Constant.Command.JOINOK)) {
+            node.incReceivedQueryCount();
             node.getRoutingTable().add(neighbourCredential);
         }
         printRoutingTable(node.getRoutingTable());
@@ -244,6 +245,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     // done
     @Override
     public void searchOk(SearchResponse searchResponse) {
+        node.incForwardedQueryCount();
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
         logMe(msg);
         String uri = Constant.HTTP + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
@@ -398,11 +400,11 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
 
     /**
-     * @param searchRequest
-     * Make a new search request from local node
+     * @param searchRequest Make a new search request from local node
      */
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
+        node.incSearchedQueryCount();
         searchRequest.setHops(searchRequest.incHops());
         node.getQueryTable().add(new QueryRecord(searchRequest.getSequenceNo(), searchRequest.getFileName(), new Date()));
         List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
@@ -426,6 +428,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void passSearchRequest(SearchRequest searchRequest) {
+        node.incForwardedQueryCount();
         if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
             return; // search query loop has eliminated
         }
@@ -485,6 +488,5 @@ public class NodeOpsWS implements NodeOps, Runnable {
         this.logFlag = true;
         System.out.println(log);
     }
-
 
 }
