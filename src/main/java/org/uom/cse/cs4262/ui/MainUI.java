@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -68,6 +70,7 @@ public class MainUI extends javax.swing.JFrame {
                 while (true) {
                     updateLog();
                     updateRoutingTable();
+                    updateSearchTable();
                     UpdateStatTable();
                     try {
                         Thread.sleep(1000);
@@ -138,9 +141,9 @@ public class MainUI extends javax.swing.JFrame {
         lstMyFiles.setModel(model);
     }
 
-    private void initializeLog(){
+    private void initializeLog() {
         DefaultTableModel tblModel = (DefaultTableModel) tblLog.getModel();
-        String header[] = new String[] { "" };
+        String header[] = new String[]{""};
         tblModel.setColumnIdentifiers(header);
         tblLog.setModel(tblModel);
     }
@@ -268,7 +271,7 @@ public class MainUI extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 182));
 
         tblRoutingTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null},
                         {null, null, null},
                         {null, null, null},
@@ -278,7 +281,7 @@ public class MainUI extends javax.swing.JFrame {
                         {null, null, null},
                         {null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3"
                 }
         ));
@@ -423,9 +426,15 @@ public class MainUI extends javax.swing.JFrame {
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         lstMyFiles.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public String getElementAt(int i) {
+                return strings[i];
+            }
         });
         jScrollPane1.setViewportView(lstMyFiles);
 
@@ -443,13 +452,13 @@ public class MainUI extends javax.swing.JFrame {
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Stat Table", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         tblStatTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7"
                 }
         ));
@@ -516,13 +525,13 @@ public class MainUI extends javax.swing.JFrame {
         });
 
         tblSearchResults.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null},
                         {null, null},
                         {null, null},
                         {null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2"
                 }
         ));
@@ -587,7 +596,7 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap())
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel15, lblReceivedRequestCount});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{jLabel15, lblReceivedRequestCount});
 
         lblForwardRequestCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblForwardRequestCount.setText("0");
@@ -796,10 +805,10 @@ public class MainUI extends javax.swing.JFrame {
         jPanel13.setPreferredSize(new java.awt.Dimension(484, 100));
 
         tblLog.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1"
                 }
         ));
@@ -1077,7 +1086,7 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JTextField txtUsername;
     // End of variables declaration
 
-    public void updateRoutingTable(){
+    public void updateRoutingTable() {
         DefaultTableModel dtm = (DefaultTableModel) tblRoutingTable.getModel();
         List<Credential> routingTable = nodeOpsWS.getNode().getRoutingTable();
         //Remove rows one by one from the end of the table
@@ -1085,7 +1094,7 @@ public class MainUI extends javax.swing.JFrame {
             dtm.removeRow(i);
         }
         for (Credential routingTableRecord : routingTable) {
-            dtm.addRow(new Object[] { routingTableRecord.getIp(), routingTableRecord.getPort(), routingTableRecord.getUsername()});
+            dtm.addRow(new Object[]{routingTableRecord.getIp(), routingTableRecord.getPort(), routingTableRecord.getUsername()});
         }
     }
 
@@ -1104,7 +1113,7 @@ public class MainUI extends javax.swing.JFrame {
         }
     }
 
-    public void updatePerformanceMeasurements(){
+    public void updatePerformanceMeasurements() {
         lblReceivedRequestCount.setText(String.valueOf(nodeOpsWS.getNode().getReceivedQueryCount()));
         lblForwardRequestCount.setText(String.valueOf(nodeOpsWS.getNode().getForwardedQueryCount()));
         lblAnsweredResponceCount.setText(String.valueOf(nodeOpsWS.getNode().getAnsweredQueryCount()));
@@ -1112,6 +1121,15 @@ public class MainUI extends javax.swing.JFrame {
         lblAvgHopCountPerSearch.setText(String.valueOf(nodeOpsWS.getNode().calculateAverageHopCountPerSearch()));
         lblRequestSuccessRatio.setText(String.valueOf(nodeOpsWS.getNode().calculateRequestSuccessRatio()));
         lblAvgLatency.setText(String.valueOf(nodeOpsWS.getNode().calculateAverageLatency()));
+    }
+
+    public void updateSearchTable() {
+        HashMap<String, ArrayList<String>> searchResults = nodeOpsWS.getNode().getDisplayTable();
+        DefaultTableModel tableModel = (DefaultTableModel) tblRoutingTable.getModel();
+        tableModel.setRowCount(0);
+        for (String key : searchResults.keySet()) {
+            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
+        }
     }
 
     public void UpdateStatTable(){
