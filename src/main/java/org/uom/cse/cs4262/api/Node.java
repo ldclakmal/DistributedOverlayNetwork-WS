@@ -1,9 +1,9 @@
 package org.uom.cse.cs4262.api;
 
-import org.uom.cse.cs4262.api.message.request.SearchRequest;
-import org.uom.cse.cs4262.api.message.response.SearchResponse;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -191,7 +191,7 @@ public class Node {
 
     public float calculateRequestSuccessRatio() {
         try {
-            this.requestSuccessRatio = (float)answeredQueryCount / receivedQueryCount;
+            this.requestSuccessRatio = (float) answeredQueryCount / receivedQueryCount;
         }catch(Exception e){
             return -1;
         }

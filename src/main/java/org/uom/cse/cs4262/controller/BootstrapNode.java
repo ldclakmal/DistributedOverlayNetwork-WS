@@ -17,7 +17,6 @@ import org.uom.cse.cs4262.api.message.request.LeaveRequest;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.api.message.response.SearchResponse;
 import org.uom.cse.cs4262.ui.MainUI;
-import org.uom.cse.cs4262.ui.NodeGUI;
 
 import javax.swing.*;
 import java.util.*;
@@ -94,11 +93,6 @@ public class BootstrapNode extends SpringBootServletInitializer {
         SpringApplication.run(BootstrapNode.class, args);
     }
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(BootstrapNode.class);
-    }
-
     private static List<String> createFileList() {
         ArrayList<String> fileList = new ArrayList<>();
         fileList.add("Adventures of Tintin");
@@ -125,6 +119,11 @@ public class BootstrapNode extends SpringBootServletInitializer {
         List<String> subFileList = fileList.subList(0, 5);
 //        System.out.println("File List : " + Arrays.toString(subFileList.toArray()) + "\n");
         return subFileList;
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(BootstrapNode.class);
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)

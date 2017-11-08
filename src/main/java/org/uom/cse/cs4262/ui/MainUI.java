@@ -14,11 +14,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author Chandu Herath
@@ -33,7 +31,108 @@ public class MainUI extends javax.swing.JFrame {
 
     private int sequenceNo;
     private int currentLogCount;
+    // Variables declaration - do not modify
+    private javax.swing.JMenuItem advLeave;
+    private javax.swing.JMenuItem advRegister;
+    private javax.swing.JMenuItem advUnregister;
+    private javax.swing.JButton btnLeave;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnStop;
+    private javax.swing.JButton btnUnregsiter;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
 
+    //    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new MainUI().setVisible(true);
+//            }
+//        });
+//    }
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel22;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblAnsweredResponceCount;
+    private javax.swing.JLabel lblAvgHopCountPerSearch;
+    private javax.swing.JLabel lblAvgLatency;
+    private javax.swing.JLabel lblForwardRequestCount;
+    private javax.swing.JLabel lblReceivedRequestCount;
+    private javax.swing.JLabel lblRequestSuccessRatio;
+    private javax.swing.JLabel lblSearchRequestCount;
+    private javax.swing.JList<String> lstMyFiles;
+    private javax.swing.JMenuItem menuItemExit;
+    private javax.swing.JMenu mnuFile;
+    private javax.swing.JTable tblLog;
+    private javax.swing.JTable tblRoutingTable;
+    private javax.swing.JTable tblSearchResults;
+    private javax.swing.JTable tblStatTable;
+    private javax.swing.JTextField txtBS_IP;
+    private javax.swing.JTextField txtBS_PORT;
+    private javax.swing.JTextField txtMyIP;
+    private javax.swing.JTextField txtMyPort;
+    private javax.swing.JTextField txtSearchFile;
+    private javax.swing.JTextField txtUsername;
     public MainUI() {
         initComponents();
         initializeRoutingTable();
@@ -42,7 +141,6 @@ public class MainUI extends javax.swing.JFrame {
         initializeMyFileList();
         initializeLog();
     }
-
     public MainUI(NodeOpsWS nodeOpsWS) {
         initComponents();
         this.nodeOpsWS = nodeOpsWS;
@@ -271,7 +369,7 @@ public class MainUI extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 182));
 
         tblRoutingTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null},
                         {null, null, null},
                         {null, null, null},
@@ -281,7 +379,7 @@ public class MainUI extends javax.swing.JFrame {
                         {null, null, null},
                         {null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3"
                 }
         ));
@@ -426,9 +524,15 @@ public class MainUI extends javax.swing.JFrame {
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         lstMyFiles.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public String getElementAt(int i) {
+                return strings[i];
+            }
         });
         jScrollPane1.setViewportView(lstMyFiles);
 
@@ -446,13 +550,13 @@ public class MainUI extends javax.swing.JFrame {
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Stat Table", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         tblStatTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7"
                 }
         ));
@@ -519,13 +623,13 @@ public class MainUI extends javax.swing.JFrame {
         });
 
         tblSearchResults.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null, null},
                         {null, null},
                         {null, null},
                         {null, null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1", "Title 2"
                 }
         ));
@@ -590,7 +694,7 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap())
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel15, lblReceivedRequestCount});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{jLabel15, lblReceivedRequestCount});
 
         lblForwardRequestCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblForwardRequestCount.setText("0");
@@ -799,10 +903,10 @@ public class MainUI extends javax.swing.JFrame {
         jPanel13.setPreferredSize(new java.awt.Dimension(484, 100));
 
         tblLog.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
                         {null}
                 },
-                new String [] {
+                new String[]{
                         "Title 1"
                 }
         ));
@@ -991,114 +1095,11 @@ public class MainUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    //    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new MainUI().setVisible(true);
-//            }
-//        });
-//    }
-
     public void start() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             this.setVisible(true);
         });
     }
-
-    // Variables declaration - do not modify
-    private javax.swing.JMenuItem advLeave;
-    private javax.swing.JMenuItem advRegister;
-    private javax.swing.JMenuItem advUnregister;
-    private javax.swing.JButton btnLeave;
-    private javax.swing.JButton btnSearch;
-    private javax.swing.JButton btnStop;
-    private javax.swing.JButton btnUnregsiter;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel22;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lblAnsweredResponceCount;
-    private javax.swing.JLabel lblAvgHopCountPerSearch;
-    private javax.swing.JLabel lblAvgLatency;
-    private javax.swing.JLabel lblForwardRequestCount;
-    private javax.swing.JLabel lblReceivedRequestCount;
-    private javax.swing.JLabel lblRequestSuccessRatio;
-    private javax.swing.JLabel lblSearchRequestCount;
-    private javax.swing.JList<String> lstMyFiles;
-    private javax.swing.JMenuItem menuItemExit;
-    private javax.swing.JMenu mnuFile;
-    private javax.swing.JTable tblLog;
-    private javax.swing.JTable tblRoutingTable;
-    private javax.swing.JTable tblSearchResults;
-    private javax.swing.JTable tblStatTable;
-    private javax.swing.JTextField txtBS_IP;
-    private javax.swing.JTextField txtBS_PORT;
-    private javax.swing.JTextField txtMyIP;
-    private javax.swing.JTextField txtMyPort;
-    private javax.swing.JTextField txtSearchFile;
-    private javax.swing.JTextField txtUsername;
     // End of variables declaration
 
     public void updateRoutingTable() {
@@ -1159,7 +1160,7 @@ public class MainUI extends javax.swing.JFrame {
             for (int j = 0; j < row.getFileList().size(); j++) {
                 filelist += row.getFileList().get(j) + ", ";
             }
-            tableModel.addRow(new Object[]{row.getSearchQuery(),row.getTriggeredTime(),row.getDeliveryTime(),row.getServedNode().getIp(),row.getServedNode().getPort(),row.getHopsRequired(),filelist});
+            tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
         }
     }
 
