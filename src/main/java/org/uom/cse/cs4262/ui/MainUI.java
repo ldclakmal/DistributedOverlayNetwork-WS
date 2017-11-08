@@ -101,25 +101,6 @@ public class MainUI extends javax.swing.JFrame {
 
         }).start();
 
-        txtSearchFile.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    e.consume();
-                    btnSearch.doClick();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
-
     }
 
     private void initializeRoutingTable() {
@@ -952,9 +933,11 @@ public class MainUI extends javax.swing.JFrame {
         btnSearch.setName("SEARCHING");
         SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearchFile.getText().trim(), 0);
         List<String> searchResult = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
-        if (!searchResult.isEmpty()) {
-            nodeOpsWS.logMe("File is locally available!");
-        } else {
+
+        if (nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())) {
+            nodeOpsWS.logMe("Exact file is locally available!");
+        } else if (!searchResult.isEmpty()) {
+            nodeOpsWS.logMe("One of answer is locally available!");
             nodeOpsWS.triggerSearchRequest(searchRequest);
             updateSearchTable();
         }
@@ -1180,11 +1163,9 @@ public class MainUI extends javax.swing.JFrame {
             for (int j = 0; j < row.getFileList().size(); j++) {
                 filelist += ", " + row.getFileList().get(j);
             }
-            tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
+            tableModel.addRow(new Object[]{row.getSearchQuery(),row.getTriggeredTime(),row.getDeliveryTime(),row.getServedNode().getIp(),row.getServedNode().getPort(),row.getHopsRequired(),filelist});
         }
     }
-
-
 
 
 }
