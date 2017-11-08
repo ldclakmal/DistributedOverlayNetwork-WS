@@ -99,7 +99,16 @@ public class NodeGUI {
             public void actionPerformed(ActionEvent e) {
                 btnSearch.setEnabled(false);
                 btnSearch.setName("SEARCHING");
-                nodeOpsWS.triggerSearchRequest(new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearch.getText().trim(), 0));
+                SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearch.getText().trim(), 0);
+                List<String> searchResult = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
+                if (!searchResult.isEmpty()) {
+                    System.out.println("File is locally available");
+                }
+                else {
+                    System.out.println("xx");
+                    nodeOpsWS.triggerSearchRequest(searchRequest);
+                }
+
                 btnSearch.setEnabled(true);
                 btnSearch.setName("SEARCH");
                 txtSearch.selectAll();

@@ -35,6 +35,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     private Node node;
     private DatagramSocket socket;
     private boolean regOk = false;
+    private int TTL = 5;
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -339,7 +340,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //        } else if (response instanceof SearchResponse) {
 //            SearchResponse searchResponse = (SearchResponse) response;
 //            if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_NODE_UNREACHABLE) {
-//                log("Failure due to node unreachable\n");
+//                System.out.println("Failure due to node unreachable\n");
 //            } else if (searchResponse.getNoOfFiles() == Constant.Codes.Search.ERROR_OTHER) {
 //                log("Some other error\n");
 //            } else {
@@ -395,35 +396,56 @@ public class NodeOpsWS implements NodeOps, Runnable {
         return StatTableSearchResult;
     }
 
+
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
-        log("\nTriggered search request for " + searchRequest.getFileName() + "\n");
+        searchRequest.setHops(searchRequest.incHops());
+        List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
+        // Send search request to stat table members
+        for (StatRecord statRecord : StatTableSearchResult) {
+            Credential credential = statRecord.getServedNode();
+            search(searchRequest, credential);
+            System.out.println("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+        }
+        //TODO: Wait and see for stat members rather flooding whole routing table
+        // Send search request to routing table members
+        for (Credential credential : node.getRoutingTable()) {
+            search(searchRequest, credential);
+            System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+        }
+    }
+
+    @Override
+    public void passSearchRequest(SearchRequest searchRequest) {
+        if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
+            return; // search query loop has eliminated
+        }
+        System.out.println("\nTriggered search request for " + searchRequest.getFileName() + "\n");
         List<String> searchResult = checkFilesInFileList(searchRequest.getFileName(), node.getFileList());
         if (!searchResult.isEmpty()) {
-            log("File is available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
             SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), searchRequest.getCredential(), searchRequest.getHops(), searchResult);
-            if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
-                log(searchResponse.toString());
-            } else {
-                log("Send SEARCHOK response message\n");
-                searchOk(searchResponse);
-            }
-
+            System.out.println("Send SEARCHOK response message\n");
+            searchOk(searchResponse);
         } else {
-            log("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
-            searchRequest.setHops(searchRequest.incHops());
-            List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
-            // Send search request to stat table members
-            for (StatRecord statRecord : StatTableSearchResult) {
-                Credential credential = statRecord.getServedNode();
-                search(searchRequest, credential);
-                log("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+            //System.out.println("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
+            if (searchRequest.getHops() <= TTL){
+                searchRequest.setHops(searchRequest.incHops());
+                List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
+                // Send search request to stat table members
+                for (StatRecord statRecord : StatTableSearchResult) {
+                    Credential credential = statRecord.getServedNode();
+                    search(searchRequest, credential);
+                    System.out.println("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+                }
+                //TODO: Wait and see for stat members rather flooding whole routing table
+                // Send search request to routing table members
+                for (Credential credential : node.getRoutingTable()) {
+                    search(searchRequest, credential);
+                    System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+                }
             }
-            //TODO: Wait and see for stat members rather flooding whole routing table
-            // Send search request to routing table members
-            for (Credential credential : node.getRoutingTable()) {
-                search(searchRequest, credential);
-                log("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+            else{
+                System.out.println("Search request from"+searchRequest.getCredential().getIp()+":"+searchRequest.getCredential().getPort() +"is blocked by hop TTL\n");
             }
         }
     }
