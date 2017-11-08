@@ -260,6 +260,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
         }
     }
 
+    /**
+     * @param searchResponse Called when I get a successful response from someone else for my search
+     */
     @Override
     public void searchSuccess(SearchResponse searchResponse) {
         //update statTable
@@ -397,6 +400,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
         searchRequest.setHops(searchRequest.incHops());
+        node.getQueryTable().add(new QueryRecord(searchRequest.getSequenceNo(), searchRequest.getFileName(), new Date()));
         List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
         // Send search request to stat table members
         for (StatRecord statRecord : StatTableSearchResult) {
