@@ -140,7 +140,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             //Todo: Remove this neighbour from stat table
         }
         if (result.equals(Constant.Command.JOINOK)) {
-            incReceivedQueryCount();
+            node.incReceivedQueryCount();
             node.getRoutingTable().add(neighbourCredential);
         }
         printRoutingTable(node.getRoutingTable());
@@ -487,10 +487,6 @@ public class NodeOpsWS implements NodeOps, Runnable {
         this.displayLog.add(log);
         this.logFlag = true;
         System.out.println(log);
-    }
-
-    public void incReceivedQueryCount() {
-        node.incReceivedQueryCount();
     }
 
 }

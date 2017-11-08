@@ -131,7 +131,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @ResponseBody
     public String search(@RequestBody String json) {
         System.out.println("Search api end point triggered");
-        nodeOpsWS.incReceivedQueryCount();
+        nodeOpsWS.getNode().incReceivedQueryCount();
         SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
         Executors.newScheduledThreadPool(1).schedule(
                 () -> nodeOpsWS.passSearchRequest(searchRequest),
@@ -145,7 +145,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @ResponseBody
     public String searchOk(@RequestBody String json) {
         System.out.println("Search OK api end point triggered");
-        nodeOpsWS.incReceivedQueryCount();
+        nodeOpsWS.getNode().incReceivedQueryCount();
         SearchResponse searchResponse = new Gson().fromJson(json, SearchResponse.class);
         nodeOpsWS.searchSuccess(searchResponse);
         return String.valueOf(HttpStatus.OK);
@@ -155,7 +155,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @ResponseBody
     public String join(@RequestBody String json) {
         System.out.println("Join api end point triggered");
-        nodeOpsWS.incReceivedQueryCount();
+        nodeOpsWS.getNode().incReceivedQueryCount();
         JoinRequest joinRequest = new Gson().fromJson(json, JoinRequest.class);
         nodeOpsWS.joinMe(joinRequest);
         return Constant.Command.JOINOK;
@@ -166,7 +166,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @ResponseBody
     public String leave(@RequestBody String json) {
         System.out.println("Leave api end point triggered");
-        nodeOpsWS.incReceivedQueryCount();
+        nodeOpsWS.getNode().incReceivedQueryCount();
         LeaveRequest leaveRequest = new Gson().fromJson(json, LeaveRequest.class);
         nodeOpsWS.removeMe(leaveRequest);
         return Constant.Command.LEAVEOK;

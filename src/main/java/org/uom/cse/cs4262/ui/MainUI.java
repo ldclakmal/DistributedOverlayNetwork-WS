@@ -1046,13 +1046,17 @@ public class MainUI extends javax.swing.JFrame {
             int newLogCount = logList.size() - currentLogCount;
             List<String> newLogs = logList.subList(logList.size() - newLogCount, logList.size());
             for (String newLog : newLogs) {
-
+                //TODO add to lstLog table lstLog.addRow(new Object[]{newlog})
             }
 
             //update self variables
             currentLogCount = logList.size();
             nodeOpsWS.setLogFlag(false);
         }
+    }
+
+    public void updateSearchTable() {
+        tblSearchResults.addRow
     }
 
 
