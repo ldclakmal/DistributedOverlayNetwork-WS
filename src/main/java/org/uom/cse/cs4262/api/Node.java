@@ -3,10 +3,7 @@ package org.uom.cse.cs4262.api;
 import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.api.message.response.SearchResponse;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +22,7 @@ public class Node {
     private int forwardedQueryCount;
     private int answeredQueryCount;
     private int searchedQueryCount;
-    private HashMap<String, ArrayList<String>> displayTable;
+    private LinkedHashMap<String, ArrayList<String>> displayTable;
     private List<QueryRecord> queryTable;
 
     private float requestSuccessRatio;
@@ -33,7 +30,7 @@ public class Node {
     private float avgHopCount;
 
 
-    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> displayTable, List<QueryRecord> queryTable) {
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, LinkedHashMap<String, ArrayList<String>> displayTable, List<QueryRecord> queryTable) {
         this.credential = credential;
         this.fileList = fileList;
         this.routingTable = routingTable;
@@ -124,11 +121,11 @@ public class Node {
         this.searchedQueryCount = searchedQueryCount;
     }
 
-    public HashMap<String, ArrayList<String>> getDisplayTable() {
+    public LinkedHashMap<String, ArrayList<String>> getDisplayTable() {
         return displayTable;
     }
 
-    public void setDisplayTable(HashMap<String, ArrayList<String>> displayTable) {
+    public void setDisplayTable(LinkedHashMap<String, ArrayList<String>> displayTable) {
         this.displayTable = displayTable;
     }
 

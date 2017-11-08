@@ -250,6 +250,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         logMe(msg);
         String uri = Constant.HTTP + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
         try {
+            searchResponse.setCredential(node.getCredential());
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchResponse), String.class);
             logMe(result);
         } catch (ResourceAccessException exception) {
@@ -407,7 +408,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         logMe("Search triggered!!!!!");
         node.incSearchedQueryCount();
         String query = searchRequest.getFileName();
-        if (node.getDisplayTable().get(query) != null) {
+        if (!node.getDisplayTable().containsKey(query)) {
             node.getDisplayTable().put(query, new ArrayList<>());
         }
         searchRequest.setHops(searchRequest.incHops());
