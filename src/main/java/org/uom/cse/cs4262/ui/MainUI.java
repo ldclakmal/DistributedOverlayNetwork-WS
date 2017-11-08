@@ -90,7 +90,6 @@ public class MainUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("update performance measurements");
                     updatePerformanceMeasurements();
                     try {
                         Thread.sleep(2000);
@@ -1188,7 +1187,7 @@ public class MainUI extends javax.swing.JFrame {
             StatRecord row = statTable.get(i);
             String filelist = "";
             for (int j = 0; j < row.getFileList().size(); j++) {
-                filelist += ", " + row.getFileList().get(j);
+                filelist += row.getFileList().get(j) + ", ";
             }
             tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
         }
