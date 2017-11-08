@@ -78,7 +78,7 @@ public class TestClass {
     }
 
     @Test
-    public void testUI(){
+    public void testUI() {
         MainUI mainFrame = new MainUI();
         mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         mainFrame.pack();
