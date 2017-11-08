@@ -18,10 +18,6 @@ public class QueryRecord {
         this.triggeredTime = triggeredTime;
     }
 
-    public QueryRecord(int sequenceNo) {
-        this.sequenceNo = sequenceNo;
-    }
-
     public int getSequenceNo() {
         return sequenceNo;
     }

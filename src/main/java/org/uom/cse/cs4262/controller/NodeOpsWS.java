@@ -258,8 +258,13 @@ public class NodeOpsWS implements NodeOps, Runnable {
             }
         }
         if (queryRecord != null) {
-            StatRecord statRecord = new StatRecord(queryRecord.getSearchQuery(), queryRecord.getTriggeredTime(), new Date(), searchResponse.getHops(), searchResponse.getCredential(), searchResponse.getFileList());
+            String query = queryRecord.getSearchQuery();
+            List<String> fileList = searchResponse.getFileList();
+
+            StatRecord statRecord = new StatRecord(query, queryRecord.getTriggeredTime(), new Date(), searchResponse.getHops(), searchResponse.getCredential(), fileList);
             node.getStatTable().add(statRecord);
+
+            node.getDisplayTable().get(query).addAll(fileList);
             System.out.println("\"" + statRecord.getSearchQuery() + "\" found at: " + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + "\nStatTable is updated.");
         }
     }
@@ -427,6 +432,5 @@ public class NodeOpsWS implements NodeOps, Runnable {
             }
         }
     }
-
 
 }
