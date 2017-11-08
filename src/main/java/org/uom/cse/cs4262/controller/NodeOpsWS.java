@@ -202,9 +202,10 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
-            if (result == "202"){
+            if (result == "202") {
                 return true;
             }
+            logMe("Sent SEARCH for \"" + searchRequest.getFileName() + "\" to " + sendCredentials.getIp() + ":" + sendCredentials.getPort() + " at " + getCurrentTime());
         } catch (ResourceAccessException exception) {
             //connection refused to the api end point
             if (node.getRoutingTable().contains(sendCredentials)) {
@@ -360,7 +361,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
         //TODO: Wait and see for stat members rather flooding whole routing table
         // Send search request to routing table members
         for (Credential credential : node.getRoutingTable()) {
-            if (search(searchRequest, credential)){ break;}
+            if (search(searchRequest, credential)) {
+                break;
+            }
         }
     }
 
@@ -376,6 +379,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             return; // search query loop has eliminated
         }
         List<String> searchResult = checkFilesInFileList(searchRequest.getFileName(), node.getFileList());
+        logMe("Received SEARCH for \"" + searchRequest.getFileName() + "\" from " + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + " at " + getCurrentTime());
         if (!searchResult.isEmpty()) {
             SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), searchRequest.getCredential(), searchRequest.getHops(), searchResult);
             searchOk(searchResponse);
@@ -396,7 +400,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 // Send search request to routing table members
                 for (Credential credential : node.getRoutingTable()) {
                     node.incForwardedQueryCount();
-                    if (search(searchRequest, credential)){ break;}
+                    if (search(searchRequest, credential)) {
+                        break;
+                    }
                 }
             } else {
 //                logMe("Search request from" + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + "is blocked by hop TTL\n");

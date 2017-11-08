@@ -136,9 +136,9 @@ public class BootstrapNode extends SpringBootServletInitializer {
                 () -> nodeOpsWS.passSearchRequest(searchRequest),
                 10, TimeUnit.MILLISECONDS
         );
-        if(nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())){
+        if (nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())) {
             return String.valueOf(HttpStatus.ACCEPTED);
-        }else {
+        } else {
             return String.valueOf(HttpStatus.OK);
         }
     }

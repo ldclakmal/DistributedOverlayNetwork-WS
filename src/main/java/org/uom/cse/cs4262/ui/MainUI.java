@@ -18,6 +18,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -437,7 +438,6 @@ public class MainUI extends javax.swing.JFrame {
         btnUnregsiter.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnUnregsiter.setText("Unregister");
         btnUnregsiter.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnUnregsiter.setContentAreaFilled(false);
         btnUnregsiter.setOpaque(true);
         btnUnregsiter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -450,7 +450,6 @@ public class MainUI extends javax.swing.JFrame {
         btnLeave.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnLeave.setText("Leave");
         btnLeave.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnLeave.setContentAreaFilled(false);
         btnLeave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLeaveActionPerformed(evt);
@@ -474,7 +473,6 @@ public class MainUI extends javax.swing.JFrame {
         btnStop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnStop.setText("Stop");
         btnStop.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnStop.setContentAreaFilled(false);
         btnStop.setOpaque(true);
         btnStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -646,7 +644,6 @@ public class MainUI extends javax.swing.JFrame {
         btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnSearch.setText("Search");
         btnSearch.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnSearch.setContentAreaFilled(false);
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -1194,11 +1191,11 @@ public class MainUI extends javax.swing.JFrame {
         List<StatRecord> statTable = nodeOpsWS.getNode().getStatTable();
         for (int i = 0; i < statTable.size(); i++) {
             StatRecord row = statTable.get(i);
-            String filelist = "";
-            for (int j = 0; j < row.getFileList().size(); j++) {
-                filelist += row.getFileList().get(j) + ", ";
-            }
-            tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
+            String filelist = String.join(",", row.getFileList());
+//            for (int j = 0; j < row.getFileList().size(); j++) {
+//                filelist += row.getFileList().get(j) + ", ";
+//            }
+            tableModel.addRow(new Object[]{row.getSearchQuery(), new SimpleDateFormat("HH:mm:ss").format(row.getTriggeredTime()), new SimpleDateFormat("HH:mm:ss").format(row.getDeliveryTime()), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
         }
     }
 
