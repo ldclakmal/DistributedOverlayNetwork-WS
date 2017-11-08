@@ -55,4 +55,6 @@ public interface NodeOps {
     void printRoutingTable(List<Credential> routingTable);
 
     void removeFromStatTable(Credential credential);
+
+    void log(String log);
 }
