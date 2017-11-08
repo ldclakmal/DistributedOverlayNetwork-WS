@@ -23,8 +23,8 @@ public class Node {
     private int forwardedQueryCount;
     private int answeredQueryCount;
     private int searchedQueryCount;
-    private HashMap<String, ArrayList<String>> searchTable;
-    private HashMap<Integer, String> queryTable;
+    private HashMap<String, ArrayList<String>> displayTable;
+    private List<QueryRecord> queryTable;
 
     private int receivedRequestCount;
     private int forwardedRequestCount;
@@ -45,7 +45,7 @@ public class Node {
         this.forwardedQueryCount = forwardedQueryCount;
         this.answeredQueryCount = answeredQueryCount;
         this.searchedQueryCount = searchedQueryCount;
-        this.searchTable = searchTable;
+        this.displayTable = displayTable;
         this.queryTable = queryTable;
     }
 
@@ -121,19 +121,19 @@ public class Node {
         this.searchedQueryCount = searchedQueryCount;
     }
 
-    public HashMap<String, ArrayList<String>> getSearchTable() {
-        return searchTable;
+    public HashMap<String, ArrayList<String>> getDisplayTable() {
+        return displayTable;
     }
 
-    public void setSearchTable(HashMap<String, ArrayList<String>> searchTable) {
-        this.searchTable = searchTable;
+    public void setDisplayTable(HashMap<String, ArrayList<String>> displayTable) {
+        this.displayTable = displayTable;
     }
 
-    public HashMap<Integer, String> getQueryTable() {
+    public List<QueryRecord> getQueryTable() {
         return queryTable;
     }
 
-    public void setQueryTable(HashMap<Integer, String> queryTable) {
+    public void setQueryTable(List<QueryRecord> queryTable) {
         this.queryTable = queryTable;
     }
 

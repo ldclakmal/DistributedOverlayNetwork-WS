@@ -2,7 +2,9 @@ package org.uom.cse.cs4262;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.uom.cse.cs4262.ui.MainUI;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,5 +75,25 @@ public class TestClass {
         for (String s : matching) {
             Assert.assertTrue(s.equals("Twilight") || s.equals("Twilight saga") || s.equals("My Twilight"));
         }
+    }
+
+    @Test
+    public void testUI() {
+        MainUI mainFrame = new MainUI();
+        mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        mainFrame.pack();
+        mainFrame.setTitle("Distributed Systems Client App");
+        mainFrame.setLocationRelativeTo(null);
+        System.out.println("tttt");
+        mainFrame.setVisible(true);
+        System.out.println("yyyyy");
+        SwingUtilities.invokeLater(() -> {
+            mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            mainFrame.pack();
+            mainFrame.setTitle("Distributed Systems Client App");
+            mainFrame.setLocationRelativeTo(null);
+            new MainUI().start();
+        });
+//        mainFrame.start();
     }
 }
