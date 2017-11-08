@@ -24,9 +24,9 @@ public class Node {
     private int answeredQueryCount;
     private int searchedQueryCount;
     private HashMap<String, ArrayList<String>> searchTable;
-    private HashMap<Integer, String> queryTable;
+    private List<QueryRecord> queryTable;
 
-    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> searchTable, HashMap<Integer, String> queryTable) {
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> searchTable, List<QueryRecord> queryTable) {
         this.credential = credential;
         this.fileList = fileList;
         this.routingTable = routingTable;
@@ -120,11 +120,11 @@ public class Node {
         this.searchTable = searchTable;
     }
 
-    public HashMap<Integer, String> getQueryTable() {
+    public List<QueryRecord> getQueryTable() {
         return queryTable;
     }
 
-    public void setQueryTable(HashMap<Integer, String> queryTable) {
+    public void setQueryTable(List<QueryRecord> queryTable) {
         this.queryTable = queryTable;
     }
 }

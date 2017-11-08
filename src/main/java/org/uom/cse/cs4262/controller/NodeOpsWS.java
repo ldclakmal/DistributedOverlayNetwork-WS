@@ -250,16 +250,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
     public void searchSuccess(SearchResponse searchResponse) {
         //update statTable
         int sequenceNo = searchResponse.getSequenceNo();
-        StatRecord statRecord = node.getStatTable().get(sequenceNo);
-        if (statRecord != null) {
-            statRecord.setDeliveryTime(new Date());
-            statRecord.setHopsRequired(searchResponse.getHops());
-            statRecord.setServedNode(searchResponse.getCredential());
-            statRecord.setFileList(searchResponse.getFileList());
-            node.getStatTable().add(sequenceNo, statRecord);
-
+        QueryRecord queryRecord = null;
+        for (QueryRecord qr : node.getQueryTable()) {
+            if (qr.getSequenceNo() == sequenceNo) {
+                queryRecord = qr;
+                break;
+            }
+        }
+        if (queryRecord != null) {
+            StatRecord statRecord = new StatRecord(queryRecord.getSearchQuery(), queryRecord.getTriggeredTime(), new Date(), searchResponse.getHops(), searchResponse.getCredential(), searchResponse.getFileList());
+            node.getStatTable().add(statRecord);
             System.out.println("\"" + statRecord.getSearchQuery() + "\" found at: " + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + "\nStatTable is updated.");
-
         }
     }
 
