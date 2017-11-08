@@ -404,10 +404,15 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
+        logMe("Search triggered!!!!!");
         node.incSearchedQueryCount();
+        String query = searchRequest.getFileName();
+        if (node.getDisplayTable().get(query) != null) {
+            node.getDisplayTable().put(query, new ArrayList<>());
+        }
         searchRequest.setHops(searchRequest.incHops());
-        node.getQueryTable().add(new QueryRecord(searchRequest.getSequenceNo(), searchRequest.getFileName(), new Date()));
-        List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
+        node.getQueryTable().add(new QueryRecord(searchRequest.getSequenceNo(), query, new Date()));
+        List<StatRecord> StatTableSearchResult = checkFilesInStatTable(query, node.getStatTable());
         // Send search request to stat table members
         for (StatRecord statRecord : StatTableSearchResult) {
             Credential credential = statRecord.getServedNode();
@@ -429,7 +434,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void passSearchRequest(SearchRequest searchRequest) {
         node.incForwardedQueryCount();
-        if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
+//        if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
+        if (searchRequest.getCredential().equals(node.getCredential())) {
+            logMe("Query LOOP eliminated ----------------------------");
             return; // search query loop has eliminated
         }
         logMe("\nTriggered search request for " + searchRequest.getFileName() + "\n");
