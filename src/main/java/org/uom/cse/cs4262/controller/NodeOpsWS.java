@@ -202,7 +202,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
-            logMe("Sent SEARCH to " + sendCredentials.getIp() + ":" + sendCredentials.getPort() + " at " + getCurrentTime());
+            logMe("Sent SEARCH for \"" + searchRequest.getFileName() + "\" to " + sendCredentials.getIp() + ":" + sendCredentials.getPort() + " at " + getCurrentTime());
         } catch (ResourceAccessException exception) {
             //connection refused to the api end point
             if (node.getRoutingTable().contains(sendCredentials)) {
@@ -372,6 +372,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             return; // search query loop has eliminated
         }
         List<String> searchResult = checkFilesInFileList(searchRequest.getFileName(), node.getFileList());
+        logMe("Received SEARCH for \"" + searchRequest.getFileName() + "\" from " + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + " at " + getCurrentTime());
         if (!searchResult.isEmpty()) {
             SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), searchRequest.getCredential(), searchRequest.getHops(), searchResult);
             searchOk(searchResponse);
