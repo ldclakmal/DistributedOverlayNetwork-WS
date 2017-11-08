@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -133,6 +135,7 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JTextField txtMyPort;
     private javax.swing.JTextField txtSearchFile;
     private javax.swing.JTextField txtUsername;
+
     public MainUI() {
         initComponents();
         initializeRoutingTable();
@@ -141,6 +144,7 @@ public class MainUI extends javax.swing.JFrame {
         initializeMyFileList();
         initializeLog();
     }
+
     public MainUI(NodeOpsWS nodeOpsWS) {
         initComponents();
         this.nodeOpsWS = nodeOpsWS;
@@ -455,6 +459,13 @@ public class MainUI extends javax.swing.JFrame {
         btnStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStopActionPerformed(evt);
+            }
+        });
+
+        tblLog.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int lastIndex = tblLog.getRowCount() - 1;
+                tblLog.changeSelection(lastIndex, 0, false, false);
             }
         });
 
@@ -1031,13 +1042,20 @@ public class MainUI extends javax.swing.JFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
         btnSearch.setEnabled(false);
         btnSearch.setName("SEARCHING");
-        SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearchFile.getText().trim(), 0);
-        List<String> searchResult = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
-
+        String query = txtSearchFile.getText().trim();
+        nodeOpsWS.logMe("Started searching for \"" + query + "\"...");
+        SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), query, 0);
+        List<String> mySearchResults = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
+        if (!nodeOpsWS.getNode().getDisplayTable().containsKey(query)) {
+            nodeOpsWS.getNode().getDisplayTable().put(query, new ArrayList<>());
+        }
         if (nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())) {
-            nodeOpsWS.logMe("Exact file is locally available!");
-        } else if (!searchResult.isEmpty()) {
-            nodeOpsWS.logMe("One of answer is locally available!");
+            nodeOpsWS.logMe("Exactly matching file is locally available!");
+        } else {
+            if (!mySearchResults.isEmpty()) {
+                nodeOpsWS.logMe("Partially matching file is locally available!");
+                nodeOpsWS.getNode().getDisplayTable().get(query).addAll(mySearchResults);
+            }
             nodeOpsWS.triggerSearchRequest(searchRequest);
             updateSearchTable();
         }

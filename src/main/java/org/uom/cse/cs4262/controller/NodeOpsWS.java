@@ -343,12 +343,9 @@ public class NodeOpsWS implements NodeOps, Runnable {
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
         String query = searchRequest.getFileName();
-        logMe("Started SEARCH for \"" + query + "\" at " + getCurrentTime());
+//        logMe("Sent SEARCH to others for \"" + query + "\" at " + getCurrentTime());
         node.incSearchedQueryCount();
 
-        if (!node.getDisplayTable().containsKey(query)) {
-            node.getDisplayTable().put(query, new ArrayList<>());
-        }
         searchRequest.setHops(searchRequest.incHops());
         node.getQueryTable().add(new QueryRecord(searchRequest.getSequenceNo(), query, new Date()));
         List<StatRecord> StatTableSearchResult = checkFilesInStatTable(query, node.getStatTable());
@@ -357,7 +354,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             if (statRecord.getSearchQuery().equals(searchRequest.getFileName())) {
                 Credential credential = statRecord.getServedNode();
                 search(searchRequest, credential);
-                logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+//                logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
             }
         }
         //TODO: Wait and see for stat members rather flooding whole routing table
