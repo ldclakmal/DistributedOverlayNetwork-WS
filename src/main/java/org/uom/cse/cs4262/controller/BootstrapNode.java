@@ -44,10 +44,10 @@ public class BootstrapNode extends SpringBootServletInitializer {
 
         for (int i = 0; i < args.length; i = i + 2) {
             paramMap.put(args[i], args[i + 1]);
-            System.out.println(args[i] + " : " + args[i + 1]);
+//            System.out.println(args[i] + " : " + args[i + 1]);
         }
 
-        System.out.println();
+//        System.out.println();
 
         String bootstrapIp = paramMap.get("-b") != null ? paramMap.get("-b") : Constant.BOOTSTRAP_SERVER_IP;
         String nodeIp = paramMap.get("-i") != null ? paramMap.get("-i") : Constant.BOOTSTRAP_SERVER_IP;
@@ -123,28 +123,28 @@ public class BootstrapNode extends SpringBootServletInitializer {
         fileList.add("Hacking_for_Dummies");
         Collections.shuffle(fileList);
         List<String> subFileList = fileList.subList(0, 5);
-        System.out.println("File List : " + Arrays.toString(subFileList.toArray()) + "\n");
+//        System.out.println("File List : " + Arrays.toString(subFileList.toArray()) + "\n");
         return subFileList;
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
     public String search(@RequestBody String json) {
-        System.out.println("Search api end point triggered");
+//        System.out.println("Search api end point triggered");
         nodeOpsWS.getNode().incReceivedQueryCount();
         SearchRequest searchRequest = new Gson().fromJson(json, SearchRequest.class);
         Executors.newScheduledThreadPool(1).schedule(
                 () -> nodeOpsWS.passSearchRequest(searchRequest),
                 10, TimeUnit.MILLISECONDS
         );
-        System.out.println("End of search aPi");
+//        System.out.println("End of search aPi");
         return String.valueOf(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/searchok", method = RequestMethod.POST)
     @ResponseBody
     public String searchOk(@RequestBody String json) {
-        System.out.println("Search OK api end point triggered");
+//        System.out.println("Search OK api end point triggered");
         nodeOpsWS.getNode().incReceivedQueryCount();
         SearchResponse searchResponse = new Gson().fromJson(json, SearchResponse.class);
         nodeOpsWS.searchSuccess(searchResponse);
@@ -154,7 +154,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @RequestMapping(value = "/join", method = RequestMethod.POST)
     @ResponseBody
     public String join(@RequestBody String json) {
-        System.out.println("Join api end point triggered");
+//        System.out.println("Join api end point triggered");
         nodeOpsWS.getNode().incReceivedQueryCount();
         JoinRequest joinRequest = new Gson().fromJson(json, JoinRequest.class);
         nodeOpsWS.joinMe(joinRequest);
@@ -165,7 +165,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
     @RequestMapping(value = "/leave", method = RequestMethod.POST)
     @ResponseBody
     public String leave(@RequestBody String json) {
-        System.out.println("Leave api end point triggered");
+//        System.out.println("Leave api end point triggered");
         nodeOpsWS.getNode().incReceivedQueryCount();
         LeaveRequest leaveRequest = new Gson().fromJson(json, LeaveRequest.class);
         nodeOpsWS.removeMe(leaveRequest);
