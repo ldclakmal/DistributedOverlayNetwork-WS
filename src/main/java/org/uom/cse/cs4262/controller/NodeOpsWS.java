@@ -245,6 +245,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     // done
     @Override
     public void searchOk(SearchResponse searchResponse) {
+        node.incForwardedQueryCount();
         node.incAnsweredQueryCount();
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
         logMe(msg);
@@ -461,6 +462,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 //TODO: Wait and see for stat members rather flooding whole routing table
                 // Send search request to routing table members
                 for (Credential credential : node.getRoutingTable()) {
+                    node.incForwardedQueryCount();
                     search(searchRequest, credential);
                     logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }

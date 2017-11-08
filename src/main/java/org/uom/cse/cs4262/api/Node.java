@@ -176,7 +176,7 @@ public class Node {
     }
 
     public float calculateAverageHopCountPerSearch() {
-        int totalHopCount = 0;
+        float totalHopCount = 0;
         for (int i = 0; i < this.statTable.size(); i++) {
             StatRecord statRecord = this.statTable.get(i);
             totalHopCount += statRecord.getHopsRequired();
@@ -191,7 +191,7 @@ public class Node {
 
     public float calculateRequestSuccessRatio() {
         try {
-            this.requestSuccessRatio = answeredQueryCount / receivedQueryCount;
+            this.requestSuccessRatio = (float)answeredQueryCount / receivedQueryCount;
         }catch(Exception e){
             return -1;
         }
@@ -199,8 +199,8 @@ public class Node {
     }
 
     public long getDateDiff(Date date1, Date date2) {
-        //time difference will return in seconds
-        TimeUnit timeUnit = TimeUnit.SECONDS;
+        //time difference will return in miliseconds
+        TimeUnit timeUnit = TimeUnit.MILLISECONDS;
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
