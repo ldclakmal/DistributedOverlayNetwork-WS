@@ -27,15 +27,7 @@ public class MainUI extends javax.swing.JFrame {
 
     private int sequenceNo;
 
-    public MainUI() {
-        initComponents();
-        initializeRoutingTable();
-        InitializeStatTable();
-        InitializeSearchResultsTable();
-        initializeMyFileList();
-        initializeLog();
-        txtSearchFile.setEnabled(false);
-    }
+
 
     public MainUI(NodeOpsWS nodeOpsWS) {
         initComponents();
@@ -45,7 +37,15 @@ public class MainUI extends javax.swing.JFrame {
         InitializeSearchResultsTable();
         initializeMyFileList();
         initializeLog();
+
+        //lock user creadential fields
+        txtBS_IP.setEnabled(false);
+        txtMyIP.setEnabled(false);
+        txtMyPort.setEnabled(false);
+        txtUsername.setEnabled(false);
         txtSearchFile.setEnabled(false);
+
+        setUserDetails();
     }
 
     private void initializeRoutingTable(){
@@ -109,6 +109,14 @@ public class MainUI extends javax.swing.JFrame {
         initializeLog();
         resetPerformanceMeasurements();
         txtSearchFile.setEnabled(false);
+    }
+
+    public void setUserDetails(){
+        txtBS_IP.setText(nodeOpsWS.getNode().getBootstrap().getIp());
+//        txtBS_PORT.setText(nodeOpsWS.getNode().getBootstrap().getPort());
+        txtMyIP.setText(nodeOpsWS.getNode().getCredential().getIp());
+        txtMyPort.setText(nodeOpsWS.getNode().getCredential().getIp());
+        txtUsername.setText(nodeOpsWS.getNode().getCredential().getUsername());
     }
 
     /**
@@ -849,11 +857,6 @@ public class MainUI extends javax.swing.JFrame {
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
 
-        //lock user creadential fields
-        txtBS_IP.setEnabled(false);
-        txtMyIP.setEnabled(false);
-        txtMyPort.setEnabled(false);
-        txtUsername.setEnabled(false);
         //lock search fields
         txtSearchFile.setEnabled(true);
     }
@@ -861,11 +864,6 @@ public class MainUI extends javax.swing.JFrame {
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
 
-        //unlock user credential fields
-        txtBS_IP.setEnabled(true);
-        txtMyIP.setEnabled(true);
-        txtMyPort.setEnabled(true);
-        txtUsername.setEnabled(true);
         //lock search fields
         txtSearchFile.setEnabled(false);
     }
