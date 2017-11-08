@@ -338,8 +338,10 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void triggerSearchRequest(SearchRequest searchRequest) {
-        node.incSearchedQueryCount();
         String query = searchRequest.getFileName();
+        logMe("Started SEARCH for \"" + query + "\" at " + getCurrentTime());
+        node.incSearchedQueryCount();
+
         if (!node.getDisplayTable().containsKey(query)) {
             node.getDisplayTable().put(query, new ArrayList<>());
         }
