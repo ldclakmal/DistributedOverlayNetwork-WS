@@ -16,10 +16,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * @author Chandu Herath
@@ -959,8 +956,9 @@ public class MainUI extends javax.swing.JFrame {
             nodeOpsWS.logMe("File is locally available!");
         } else {
             nodeOpsWS.triggerSearchRequest(searchRequest);
+            updateSearchTable();
         }
-
+        txtSearchFile.setText("");
         btnSearch.setEnabled(true);
         btnSearch.setName("Search");
     }
@@ -1142,7 +1140,7 @@ public class MainUI extends javax.swing.JFrame {
             int newLogCount = logList.size() - currentLogCount;
             List<String> newLogs = logList.subList(logList.size() - newLogCount, logList.size());
             for (String newLog : newLogs) {
-                //TODO add to lstLog table lstLog.addRow(new Object[]{newlog})
+                ((DefaultTableModel) tblLog.getModel()).addRow(new Object[]{newLog});
             }
 
             //update self variables
@@ -1162,28 +1160,27 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     public void updateSearchTable() {
-        HashMap<String, ArrayList<String>> searchResults = nodeOpsWS.getNode().getDisplayTable();
-        DefaultTableModel tableModel = (DefaultTableModel) tblRoutingTable.getModel();
-//        tableModel.setRowCount(0);
-//        for (String key : searchResults.keySet()) {
-//            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
-//        }
+        LinkedHashMap<String, ArrayList<String>> searchResults = nodeOpsWS.getNode().getDisplayTable();
+        ((DefaultTableModel) tblSearchResults.getModel()).setRowCount(0);
+        for (String key : searchResults.keySet()) {
+            ((DefaultTableModel) tblSearchResults.getModel()).addRow(new Object[]{key, String.join(",", searchResults.get(key))});
+        }
     }
 
-    public void UpdateStatTable(){
+    public void UpdateStatTable() {
         DefaultTableModel tableModel = (DefaultTableModel) tblStatTable.getModel();
         //remove previous records
         for (int i = tableModel.getRowCount() - 1; i >= 0; i--) {
             tableModel.removeRow(i);
         }
         List<StatRecord> statTable = nodeOpsWS.getNode().getStatTable();
-        for(int i=0; i<statTable.size();i++){
+        for (int i = 0; i < statTable.size(); i++) {
             StatRecord row = statTable.get(i);
             String filelist = "";
-            for (int j=0; j<row.getFileList().size();j++){
+            for (int j = 0; j < row.getFileList().size(); j++) {
                 filelist += ", " + row.getFileList().get(j);
             }
-            tableModel.addRow(new Object[]{row.getSearchQuery(),row.getTriggeredTime(),row.getDeliveryTime(),row.getServedNode().getIp(),row.getServedNode().getPort(),row.getHopsRequired(),filelist});
+            tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
         }
     }
 

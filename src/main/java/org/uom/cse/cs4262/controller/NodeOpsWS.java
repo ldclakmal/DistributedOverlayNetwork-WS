@@ -407,7 +407,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         logMe("Search triggered!!!!!");
         node.incSearchedQueryCount();
         String query = searchRequest.getFileName();
-        if (node.getDisplayTable().get(query) != null) {
+        if (!node.getDisplayTable().containsKey(query)) {
             node.getDisplayTable().put(query, new ArrayList<>());
         }
         searchRequest.setHops(searchRequest.incHops());
@@ -442,7 +442,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         logMe("\nTriggered search request for " + searchRequest.getFileName() + "\n");
         List<String> searchResult = checkFilesInFileList(searchRequest.getFileName(), node.getFileList());
         if (!searchResult.isEmpty()) {
-            SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), searchRequest.getCredential(), searchRequest.getHops(), searchResult);
+            SearchResponse searchResponse = new SearchResponse(searchRequest.getSequenceNo(), searchResult.size(), node.getCredential(), searchRequest.getHops(), searchResult);
             logMe("Send SEARCHOK response message\n");
             searchOk(searchResponse);
         } else {

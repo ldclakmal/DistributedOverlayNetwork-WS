@@ -59,7 +59,7 @@ public class BootstrapNode extends SpringBootServletInitializer {
         Credential bootstrapCredential = new Credential(bootstrapIp, Constant.BOOTSTRAP_SERVER_PORT, Constant.BOOTSTRAP_SERVER_USERNAME);
         Credential nodeCredential = new Credential(nodeIp, nodePort, nodeUsername);
 
-        Node node = new Node(nodeCredential, createFileList(), new ArrayList<>(), new ArrayList<>(), bootstrapCredential, 0, 0, 0, 0, new HashMap<>(), new ArrayList<>());
+        Node node = new Node(nodeCredential, createFileList(), new ArrayList<>(), new ArrayList<>(), bootstrapCredential, 0, 0, 0, 0, new LinkedHashMap<>(), new ArrayList<>());
 
         nodeOpsWS = new NodeOpsWS(node);
         nodeOpsWS.start();
