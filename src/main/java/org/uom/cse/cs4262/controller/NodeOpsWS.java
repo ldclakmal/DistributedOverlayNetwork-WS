@@ -245,7 +245,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
     // done
     @Override
     public void searchOk(SearchResponse searchResponse) {
-        node.incForwardedQueryCount();
+        node.incAnsweredQueryCount();
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
         logMe(msg);
         String uri = Constant.HTTP + searchResponse.getCredential().getIp() + ":" + searchResponse.getCredential().getPort() + Constant.UrlPattern.SEARCHOK;
@@ -433,7 +433,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void passSearchRequest(SearchRequest searchRequest) {
-        node.incForwardedQueryCount();
+
 //        if (searchRequest.getCredential().getIp() == node.getCredential().getIp() && searchRequest.getCredential().getPort() == node.getCredential().getPort()) {
         if (searchRequest.getCredential().equals(node.getCredential())) {
             logMe("Query LOOP eliminated ----------------------------");
@@ -453,6 +453,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 // Send search request to stat table members
                 for (StatRecord statRecord : StatTableSearchResult) {
                     Credential credential = statRecord.getServedNode();
+                    node.incForwardedQueryCount();
                     search(searchRequest, credential);
                     logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }

@@ -170,8 +170,12 @@ public class Node {
             StatRecord statRecord = this.statTable.get(i);
             totalDifference += getDateDiff(statRecord.getTriggeredTime(), statRecord.getDeliveryTime());
         }
-        this.setAvgLatency(totalDifference / searchedQueryCount);
-        return this.getAvgLatency();
+        try {
+            this.avgLatency = totalDifference / searchedQueryCount;
+        }catch(Exception e){
+            return -1;
+        }
+        return avgLatency;
     }
 
     public float calculateAverageHopCountPerSearch() {
@@ -180,13 +184,21 @@ public class Node {
             StatRecord statRecord = this.statTable.get(i);
             totalHopCount += statRecord.getHopsRequired();
         }
-        this.setAvgHopCount(totalHopCount / searchedQueryCount);
-        return 0.0f;
+        try{
+        avgHopCount = totalHopCount / searchedQueryCount;
+        }catch (Exception e){
+            return -1;
+        }
+        return avgHopCount;
     }
 
     public float calculateRequestSuccessRatio() {
-        this.setRequestSuccessRatio(answeredQueryCount / receivedQueryCount);
-        return getRequestSuccessRatio();
+        try {
+            this.requestSuccessRatio = answeredQueryCount / receivedQueryCount;
+        }catch(Exception e){
+            return -1;
+        }
+        return requestSuccessRatio;
     }
 
     public long getDateDiff(Date date1, Date date2) {
