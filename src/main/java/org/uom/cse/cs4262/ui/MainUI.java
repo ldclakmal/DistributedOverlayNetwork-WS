@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1161,11 +1162,11 @@ public class MainUI extends javax.swing.JFrame {
         List<StatRecord> statTable = nodeOpsWS.getNode().getStatTable();
         for (int i = 0; i < statTable.size(); i++) {
             StatRecord row = statTable.get(i);
-            String filelist = "";
-            for (int j = 0; j < row.getFileList().size(); j++) {
-                filelist += row.getFileList().get(j) + ", ";
-            }
-            tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
+            String filelist = String.join(",", row.getFileList());
+//            for (int j = 0; j < row.getFileList().size(); j++) {
+//                filelist += row.getFileList().get(j) + ", ";
+//            }
+            tableModel.addRow(new Object[]{row.getSearchQuery(), new SimpleDateFormat("HH:mm:ss").format(row.getTriggeredTime()), new SimpleDateFormat("HH:mm:ss").format(row.getDeliveryTime()), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
         }
     }
 
