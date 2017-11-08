@@ -1143,10 +1143,12 @@ public class MainUI extends javax.swing.JFrame {
     public void updateSearchTable() {
         HashMap<String, ArrayList<String>> searchResults = nodeOpsWS.getNode().getDisplayTable();
         DefaultTableModel tableModel = (DefaultTableModel) tblRoutingTable.getModel();
+        System.out.println("Inside updateSearchTable");
 //        tableModel.setRowCount(0);
-//        for (String key : searchResults.keySet()) {
-//            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
-//        }
+        for (String key : searchResults.keySet()) {
+            System.out.println("Keys + 1");
+            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
+        }
     }
 
     public void UpdateStatTable(){
