@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.*;
 
 /**
@@ -98,6 +100,25 @@ public class MainUI extends javax.swing.JFrame {
             }
 
         }).start();
+
+        txtSearchFile.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    e.consume();
+                    btnSearch.doClick();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
 
     }
 
@@ -1162,6 +1183,8 @@ public class MainUI extends javax.swing.JFrame {
             tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
         }
     }
+
+
 
 
 }
