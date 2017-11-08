@@ -197,19 +197,23 @@ public class NodeOpsWS implements NodeOps, Runnable {
      * @param sendCredentials API Call to send search request to others
      */
     @Override
-    public void search(SearchRequest searchRequest, Credential sendCredentials) {
+    public boolean search(SearchRequest searchRequest, Credential sendCredentials) {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
         String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
-            logMe("Sent SEARCH to " + sendCredentials.getIp() + ":" + sendCredentials.getPort() + " at " + getCurrentTime());
+            if (result == "202"){
+                return true;
+            }
         } catch (ResourceAccessException exception) {
             //connection refused to the api end point
             if (node.getRoutingTable().contains(sendCredentials)) {
                 node.getRoutingTable().remove(sendCredentials);
+                logMe(sendCredentials.getIp() + "node is not available and removed from routing table.");
             }
             //Todo: Remove this neighbour from stat table
         }
+        return false;
     }
 
     /**
@@ -356,7 +360,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         //TODO: Wait and see for stat members rather flooding whole routing table
         // Send search request to routing table members
         for (Credential credential : node.getRoutingTable()) {
-            search(searchRequest, credential);
+            if (search(searchRequest, credential)){ break;}
         }
     }
 
@@ -392,8 +396,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 // Send search request to routing table members
                 for (Credential credential : node.getRoutingTable()) {
                     node.incForwardedQueryCount();
-                    search(searchRequest, credential);
-//                    logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
+                    if (search(searchRequest, credential)){ break;}
                 }
             } else {
 //                logMe("Search request from" + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + "is blocked by hop TTL\n");

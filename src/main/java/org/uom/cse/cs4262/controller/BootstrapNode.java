@@ -136,8 +136,11 @@ public class BootstrapNode extends SpringBootServletInitializer {
                 () -> nodeOpsWS.passSearchRequest(searchRequest),
                 10, TimeUnit.MILLISECONDS
         );
-//        System.out.println("End of search aPi");
-        return String.valueOf(HttpStatus.OK);
+        if(nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())){
+            return String.valueOf(HttpStatus.ACCEPTED);
+        }else {
+            return String.valueOf(HttpStatus.OK);
+        }
     }
 
     @RequestMapping(value = "/searchok", method = RequestMethod.POST)
