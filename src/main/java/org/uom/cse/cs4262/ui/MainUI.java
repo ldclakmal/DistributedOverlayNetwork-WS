@@ -90,7 +90,6 @@ public class MainUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("update performance measurements");
                     updatePerformanceMeasurements();
                     try {
                         Thread.sleep(2000);
@@ -102,25 +101,6 @@ public class MainUI extends javax.swing.JFrame {
             }
 
         }).start();
-
-        txtSearchFile.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    e.consume();
-                    btnSearch.doClick();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
 
     }
 
@@ -291,7 +271,7 @@ public class MainUI extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 182));
 
         tblRoutingTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
                         {null, null, null},
                         {null, null, null},
                         {null, null, null},
@@ -301,7 +281,7 @@ public class MainUI extends javax.swing.JFrame {
                         {null, null, null},
                         {null, null, null}
                 },
-                new String[]{
+                new String [] {
                         "Title 1", "Title 2", "Title 3"
                 }
         ));
@@ -446,15 +426,9 @@ public class MainUI extends javax.swing.JFrame {
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         lstMyFiles.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-
-            public int getSize() {
-                return strings.length;
-            }
-
-            public String getElementAt(int i) {
-                return strings[i];
-            }
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(lstMyFiles);
 
@@ -472,13 +446,13 @@ public class MainUI extends javax.swing.JFrame {
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Stat Table", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         tblStatTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null},
                         {null, null, null, null, null, null, null}
                 },
-                new String[]{
+                new String [] {
                         "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7"
                 }
         ));
@@ -545,13 +519,13 @@ public class MainUI extends javax.swing.JFrame {
         });
 
         tblSearchResults.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
                         {null, null},
                         {null, null},
                         {null, null},
                         {null, null}
                 },
-                new String[]{
+                new String [] {
                         "Title 1", "Title 2"
                 }
         ));
@@ -602,9 +576,9 @@ public class MainUI extends javax.swing.JFrame {
                 jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblReceivedRequestCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblReceivedRequestCount, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -616,7 +590,7 @@ public class MainUI extends javax.swing.JFrame {
                                 .addContainerGap())
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{jLabel15, lblReceivedRequestCount});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel15, lblReceivedRequestCount});
 
         lblForwardRequestCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblForwardRequestCount.setText("0");
@@ -633,8 +607,8 @@ public class MainUI extends javax.swing.JFrame {
                         .addGroup(jPanel10Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblForwardRequestCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblForwardRequestCount, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel10Layout.setVerticalGroup(
@@ -661,8 +635,8 @@ public class MainUI extends javax.swing.JFrame {
                         .addGroup(jPanel11Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblAnsweredResponceCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblAnsweredResponceCount, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
@@ -688,9 +662,9 @@ public class MainUI extends javax.swing.JFrame {
                 jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel12Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblSearchRequestCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblSearchRequestCount, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel12Layout.setVerticalGroup(
@@ -717,8 +691,8 @@ public class MainUI extends javax.swing.JFrame {
                         .addGroup(jPanel18Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblAvgHopCountPerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblAvgHopCountPerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel18Layout.setVerticalGroup(
@@ -745,8 +719,8 @@ public class MainUI extends javax.swing.JFrame {
                         .addGroup(jPanel20Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel38, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblRequestSuccessRatio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblRequestSuccessRatio, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel20Layout.setVerticalGroup(
@@ -773,8 +747,8 @@ public class MainUI extends javax.swing.JFrame {
                         .addGroup(jPanel22Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel42, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblAvgLatency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblAvgLatency, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel22Layout.setVerticalGroup(
@@ -792,14 +766,14 @@ public class MainUI extends javax.swing.JFrame {
                 jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel8Layout.createSequentialGroup()
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPanel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(42, Short.MAX_VALUE))
+                                        .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(32, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
                 jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -825,13 +799,14 @@ public class MainUI extends javax.swing.JFrame {
         jPanel13.setPreferredSize(new java.awt.Dimension(484, 100));
 
         tblLog.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
                         {null}
                 },
-                new String[]{
+                new String [] {
                         "Title 1"
                 }
         ));
+        tblLog.setShowHorizontalLines(false);
         jScrollPane6.setViewportView(tblLog);
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
@@ -860,8 +835,8 @@ public class MainUI extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(20, Short.MAX_VALUE))
+                                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                                .addGap(20, 20, 20))
         );
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -910,14 +885,6 @@ public class MainUI extends javax.swing.JFrame {
                 advLeaveActionPerformed(evt);
             }
         });
-
-        tblLog.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                int lastIndex = tblLog.getRowCount() - 1;
-                tblLog.changeSelection(lastIndex, 0, false, false);
-            }
-        });
-
         jMenu4.add(advLeave);
 
         jMenuBar1.add(jMenu4);
@@ -962,9 +929,11 @@ public class MainUI extends javax.swing.JFrame {
         btnSearch.setName("SEARCHING");
         SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearchFile.getText().trim(), 0);
         List<String> searchResult = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
-        if (!searchResult.isEmpty()) {
-            nodeOpsWS.logMe("File is locally available!");
-        } else {
+
+        if (nodeOpsWS.getNode().getFileList().contains(searchRequest.getFileName())) {
+            nodeOpsWS.logMe("Exact file is locally available!");
+        } else if (!searchResult.isEmpty()) {
+            nodeOpsWS.logMe("One of answer is locally available!");
             nodeOpsWS.triggerSearchRequest(searchRequest);
             updateSearchTable();
         }
@@ -1188,9 +1157,9 @@ public class MainUI extends javax.swing.JFrame {
             StatRecord row = statTable.get(i);
             String filelist = "";
             for (int j = 0; j < row.getFileList().size(); j++) {
-                filelist += ", " + row.getFileList().get(j);
+                filelist += row.getFileList().get(j) + ", ";
             }
-            tableModel.addRow(new Object[]{row.getSearchQuery(), row.getTriggeredTime(), row.getDeliveryTime(), row.getServedNode().getIp(), row.getServedNode().getPort(), row.getHopsRequired(), filelist});
+            tableModel.addRow(new Object[]{row.getSearchQuery(),row.getTriggeredTime(),row.getDeliveryTime(),row.getServedNode().getIp(),row.getServedNode().getPort(),row.getHopsRequired(),filelist});
         }
     }
 

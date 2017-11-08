@@ -218,6 +218,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
      */
     @Override
     public void searchOk(SearchResponse searchResponse) {
+        node.incForwardedQueryCount();
         node.incAnsweredQueryCount();
         String msg = searchResponse.getMessageAsString(Constant.Command.SEARCHOK);
 
@@ -316,7 +317,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public List<String> checkFilesInFileList(String fileName, List<String> fileList) {
-        Pattern pattern = Pattern.compile(fileName);
+        Pattern pattern = Pattern.compile(fileName, Pattern.CASE_INSENSITIVE + Pattern.LITERAL);
         return fileList.stream().filter(pattern.asPredicate()).collect(Collectors.toList());
     }
 
@@ -348,8 +349,11 @@ public class NodeOpsWS implements NodeOps, Runnable {
         List<StatRecord> StatTableSearchResult = checkFilesInStatTable(query, node.getStatTable());
         // Send search request to stat table members
         for (StatRecord statRecord : StatTableSearchResult) {
-            Credential credential = statRecord.getServedNode();
-            search(searchRequest, credential);
+            if (statRecord.getSearchQuery().equals(searchRequest.getFileName())) {
+                Credential credential = statRecord.getServedNode();
+                search(searchRequest, credential);
+                logMe("Send SER request message to stat table member " + credential.getIp() + " : " + credential.getPort() + "\n");
+            }
         }
         //TODO: Wait and see for stat members rather flooding whole routing table
         // Send search request to routing table members
@@ -380,13 +384,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
                 // Send search request to stat table members
                 for (StatRecord statRecord : StatTableSearchResult) {
-                    Credential credential = statRecord.getServedNode();
-                    node.incForwardedQueryCount();
-                    search(searchRequest, credential);
+                    if (statRecord.getSearchQuery().equals(searchRequest.getFileName())) {
+                        Credential credential = statRecord.getServedNode();
+                        node.incForwardedQueryCount();
+                        search(searchRequest, credential);
+                    }
                 }
                 //TODO: Wait and see for stat members rather flooding whole routing table
                 // Send search request to routing table members
                 for (Credential credential : node.getRoutingTable()) {
+                    node.incForwardedQueryCount();
                     search(searchRequest, credential);
 //                    logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }
