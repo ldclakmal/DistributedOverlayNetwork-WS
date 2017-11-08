@@ -35,7 +35,7 @@ public class Node {
     private float avgHopCount;
 
 
-    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> searchTable, HashMap<Integer, String> queryTable) {
+    public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String,ArrayList<String>> displayTable, List<QueryRecord> queryTable) {
         this.credential = credential;
         this.fileList = fileList;
         this.routingTable = routingTable;
