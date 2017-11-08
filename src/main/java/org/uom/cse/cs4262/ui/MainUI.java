@@ -13,8 +13,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * @author Chandu Herath
@@ -29,7 +30,108 @@ public class MainUI extends javax.swing.JFrame {
 
     private int sequenceNo;
     private int currentLogCount;
+    // Variables declaration - do not modify
+    private javax.swing.JMenuItem advLeave;
+    private javax.swing.JMenuItem advRegister;
+    private javax.swing.JMenuItem advUnregister;
+    private javax.swing.JButton btnLeave;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnStop;
+    private javax.swing.JButton btnUnregsiter;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
 
+    //    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new MainUI().setVisible(true);
+//            }
+//        });
+//    }
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel22;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblAnsweredResponceCount;
+    private javax.swing.JLabel lblAvgHopCountPerSearch;
+    private javax.swing.JLabel lblAvgLatency;
+    private javax.swing.JLabel lblForwardRequestCount;
+    private javax.swing.JLabel lblReceivedRequestCount;
+    private javax.swing.JLabel lblRequestSuccessRatio;
+    private javax.swing.JLabel lblSearchRequestCount;
+    private javax.swing.JList<String> lstLog;
+    private javax.swing.JList<String> lstMyFiles;
+    private javax.swing.JMenuItem menuItemExit;
+    private javax.swing.JMenu mnuFile;
+    private javax.swing.JTable tblRoutingTable;
+    private javax.swing.JTable tblSearchResults;
+    private javax.swing.JTable tblStatTable;
+    private javax.swing.JTextField txtBS_IP;
+    private javax.swing.JTextField txtBS_PORT;
+    private javax.swing.JTextField txtMyIP;
+    private javax.swing.JTextField txtMyPort;
+    private javax.swing.JTextField txtSearchFile;
+    private javax.swing.JTextField txtUsername;
     public MainUI() {
         initComponents();
         initializeRoutingTable();
@@ -38,7 +140,6 @@ public class MainUI extends javax.swing.JFrame {
         initializeMyFileList();
         initializeLog();
     }
-
     public MainUI(NodeOpsWS nodeOpsWS) {
         initComponents();
         this.nodeOpsWS = nodeOpsWS;
@@ -67,6 +168,7 @@ public class MainUI extends javax.swing.JFrame {
                 while (true) {
                     updateLog();
                     updateRoutingTable();
+                    updateSearchTable();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -946,117 +1048,14 @@ public class MainUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    //    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new MainUI().setVisible(true);
-//            }
-//        });
-//    }
-
     public void start() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             this.setVisible(true);
         });
     }
-
-    // Variables declaration - do not modify
-    private javax.swing.JMenuItem advLeave;
-    private javax.swing.JMenuItem advRegister;
-    private javax.swing.JMenuItem advUnregister;
-    private javax.swing.JButton btnLeave;
-    private javax.swing.JButton btnSearch;
-    private javax.swing.JButton btnStop;
-    private javax.swing.JButton btnUnregsiter;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel22;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lblAnsweredResponceCount;
-    private javax.swing.JLabel lblAvgHopCountPerSearch;
-    private javax.swing.JLabel lblAvgLatency;
-    private javax.swing.JLabel lblForwardRequestCount;
-    private javax.swing.JLabel lblReceivedRequestCount;
-    private javax.swing.JLabel lblRequestSuccessRatio;
-    private javax.swing.JLabel lblSearchRequestCount;
-    private javax.swing.JList<String> lstLog;
-    private javax.swing.JList<String> lstMyFiles;
-    private javax.swing.JMenuItem menuItemExit;
-    private javax.swing.JMenu mnuFile;
-    private javax.swing.JTable tblRoutingTable;
-    private javax.swing.JTable tblSearchResults;
-    private javax.swing.JTable tblStatTable;
-    private javax.swing.JTextField txtBS_IP;
-    private javax.swing.JTextField txtBS_PORT;
-    private javax.swing.JTextField txtMyIP;
-    private javax.swing.JTextField txtMyPort;
-    private javax.swing.JTextField txtSearchFile;
-    private javax.swing.JTextField txtUsername;
     // End of variables declaration
 
-    public void updateRoutingTable(){
+    public void updateRoutingTable() {
         DefaultTableModel dtm = (DefaultTableModel) tblRoutingTable.getModel();
         List<Credential> routingTable = nodeOpsWS.getNode().getRoutingTable();
         //Remove rows one by one from the end of the table
@@ -1064,7 +1063,7 @@ public class MainUI extends javax.swing.JFrame {
             dtm.removeRow(i);
         }
         for (Credential routingTableRecord : routingTable) {
-            dtm.addRow(new Object[] { routingTableRecord.getIp(), routingTableRecord.getPort(), routingTableRecord.getUsername()});
+            dtm.addRow(new Object[]{routingTableRecord.getIp(), routingTableRecord.getPort(), routingTableRecord.getUsername()});
         }
     }
 
@@ -1084,7 +1083,12 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     public void updateSearchTable() {
-        tblSearchResults.addRow
+        HashMap<String, ArrayList<String>> searchResults = nodeOpsWS.getNode().getDisplayTable();
+        DefaultTableModel tableModel = (DefaultTableModel) tblRoutingTable.getModel();
+        tableModel.setRowCount(0);
+        for (String key : searchResults.keySet()) {
+            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
+        }
     }
 
 
