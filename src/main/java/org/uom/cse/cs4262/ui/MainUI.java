@@ -935,7 +935,7 @@ public class MainUI extends javax.swing.JFrame {
         SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearchFile.getText().trim(), 0);
         List<String> searchResult = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
         if (!searchResult.isEmpty()) {
-            System.out.println("File is locally available!");
+            nodeOpsWS.logMe("File is locally available!");
         } else {
             nodeOpsWS.triggerSearchRequest(searchRequest);
         }
@@ -953,7 +953,15 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     private void btnUnregsiterActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        btnUnregsiter.setEnabled(false);
+        try {
+            nodeOpsWS.unRegister();
+            JOptionPane.showMessageDialog(this, "Unregistered!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(this, "Unregister failed: " + e1.getMessage());
+            btnUnregsiter.setEnabled(true);
+            e1.printStackTrace();
+        }
     }
 
     private void txtBS_PORTActionPerformed(java.awt.event.ActionEvent evt) {
@@ -961,11 +969,20 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     private void btnLeaveActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        try {
+            btnLeave.setEnabled(false);
+            nodeOpsWS.leave();
+            JOptionPane.showMessageDialog(this, "Leave Successful!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(this, "Leave failed: " + e1.getMessage());
+            btnLeave.setEnabled(true);
+            e1.printStackTrace();
+        }
     }
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        btnUnregsiter.doClick();
+        btnLeave.doClick();
     }
 
     private void advLeaveActionPerformed(java.awt.event.ActionEvent evt) {
