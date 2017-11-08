@@ -26,6 +26,15 @@ public class Node {
     private HashMap<String, ArrayList<String>> searchTable;
     private HashMap<Integer, String> queryTable;
 
+    private int receivedRequestCount;
+    private int forwardedRequestCount;
+    private int answeredResponseCount;
+    private int searchedRequestCount;
+    private float requestSuccessRatio;
+    private float avgLatency;
+    private float avgHopCount;
+
+
     public Node(Credential credential, List<String> fileList, List<Credential> routingTable, List<StatRecord> statTable, Credential bootstrap, int receivedQueryCount, int forwardedQueryCount, int answeredQueryCount, int searchedQueryCount, HashMap<String, ArrayList<String>> searchTable, HashMap<Integer, String> queryTable) {
         this.credential = credential;
         this.fileList = fileList;
@@ -126,5 +135,61 @@ public class Node {
 
     public void setQueryTable(HashMap<Integer, String> queryTable) {
         this.queryTable = queryTable;
+    }
+
+    public int getReceivedRequestCount() {
+        return receivedRequestCount;
+    }
+
+    public void setReceivedRequestCount(int receivedRequestCount) {
+        this.receivedRequestCount = receivedRequestCount;
+    }
+
+    public int getForwardedRequestCount() {
+        return forwardedRequestCount;
+    }
+
+    public void setForwardedRequestCount(int forwardedRequestCount) {
+        this.forwardedRequestCount = forwardedRequestCount;
+    }
+
+    public int getAnsweredResponseCount() {
+        return answeredResponseCount;
+    }
+
+    public void setAnsweredResponseCount(int answeredResponseCount) {
+        this.answeredResponseCount = answeredResponseCount;
+    }
+
+    public int getSearchedRequestCount() {
+        return searchedRequestCount;
+    }
+
+    public void setSearchedRequestCount(int searchedRequestCount) {
+        this.searchedRequestCount = searchedRequestCount;
+    }
+
+    public float getRequestSuccessRatio() {
+        return requestSuccessRatio;
+    }
+
+    public void setRequestSuccessRatio(float requestSuccessRatio) {
+        this.requestSuccessRatio = requestSuccessRatio;
+    }
+
+    public float getAvgLatency() {
+        return avgLatency;
+    }
+
+    public void setAvgLatency(float avgLatency) {
+        this.avgLatency = avgLatency;
+    }
+
+    public float getAvgHopCount() {
+        return avgHopCount;
+    }
+
+    public void setAvgHopCount(float avgHopCount) {
+        this.avgHopCount = avgHopCount;
     }
 }
