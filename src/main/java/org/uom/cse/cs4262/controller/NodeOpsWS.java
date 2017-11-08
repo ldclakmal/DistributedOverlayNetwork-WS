@@ -11,7 +11,6 @@ import org.uom.cse.cs4262.api.message.response.SearchResponse;
 import org.uom.cse.cs4262.api.message.response.UnregisterResponse;
 import org.uom.cse.cs4262.feature.Parser;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -32,15 +31,18 @@ import java.util.stream.Collectors;
 
 public class NodeOpsWS implements NodeOps, Runnable {
 
+    RestTemplate restTemplate = new RestTemplate();
     private Node node;
     private DatagramSocket socket;
     private boolean regOk = false;
     private int TTL = 5;
-
-    RestTemplate restTemplate = new RestTemplate();
-
     private List<String> displayLog;
     private boolean logFlag;
+
+    public NodeOpsWS(Node node) {
+        this.node = node;
+        this.displayLog = new ArrayList<>();
+    }
 
     public Node getNode() {
         return node;
@@ -56,11 +58,6 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     public void setLogFlag(boolean logFlag) {
         this.logFlag = logFlag;
-    }
-
-    public NodeOpsWS(Node node) {
-        this.node = node;
-        this.displayLog = new ArrayList<>();
     }
 
     @Override
@@ -428,7 +425,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             searchOk(searchResponse);
         } else {
             //System.out.println("File is not available at " + node.getCredential().getIp() + " : " + node.getCredential().getPort() + "\n");
-            if (searchRequest.getHops() <= TTL){
+            if (searchRequest.getHops() <= TTL) {
                 searchRequest.setHops(searchRequest.incHops());
                 List<StatRecord> StatTableSearchResult = checkFilesInStatTable(searchRequest.getFileName(), node.getStatTable());
                 // Send search request to stat table members
@@ -443,9 +440,8 @@ public class NodeOpsWS implements NodeOps, Runnable {
                     search(searchRequest, credential);
                     System.out.println("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }
-            }
-            else{
-                System.out.println("Search request from"+searchRequest.getCredential().getIp()+":"+searchRequest.getCredential().getPort() +"is blocked by hop TTL\n");
+            } else {
+                System.out.println("Search request from" + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + "is blocked by hop TTL\n");
             }
         }
     }
