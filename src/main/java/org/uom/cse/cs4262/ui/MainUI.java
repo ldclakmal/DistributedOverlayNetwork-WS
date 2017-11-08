@@ -13,6 +13,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -166,6 +168,7 @@ public class MainUI extends javax.swing.JFrame {
                 while (true) {
                     updateLog();
                     updateRoutingTable();
+                    updateSearchTable();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -1112,6 +1115,15 @@ public class MainUI extends javax.swing.JFrame {
         lblAvgHopCountPerSearch.setText(String.valueOf(nodeOpsWS.getNode().calculateAverageHopCountPerSearch()));
         lblRequestSuccessRatio.setText(String.valueOf(nodeOpsWS.getNode().calculateRequestSuccessRatio()));
         lblAvgLatency.setText(String.valueOf(nodeOpsWS.getNode().calculateAverageLatency()));
+    }
+
+    public void updateSearchTable() {
+        HashMap<String, ArrayList<String>> searchResults = nodeOpsWS.getNode().getDisplayTable();
+        DefaultTableModel tableModel = (DefaultTableModel) tblRoutingTable.getModel();
+        tableModel.setRowCount(0);
+        for (String key : searchResults.keySet()) {
+            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
+        }
     }
 
 }
