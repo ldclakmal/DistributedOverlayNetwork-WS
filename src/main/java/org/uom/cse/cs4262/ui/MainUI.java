@@ -5,6 +5,8 @@
  */
 package org.uom.cse.cs4262.ui;
 
+import org.uom.cse.cs4262.api.Credential;
+import org.uom.cse.cs4262.api.message.request.SearchRequest;
 import org.uom.cse.cs4262.controller.NodeOpsWS;
 
 import javax.swing.*;
@@ -40,6 +42,7 @@ public class MainUI extends javax.swing.JFrame {
     public MainUI(NodeOpsWS nodeOpsWS) {
         initComponents();
         this.nodeOpsWS = nodeOpsWS;
+        sequenceNo = 0;
         currentLogCount = 0;
         initializeRoutingTable();
         InitializeStatTable();
@@ -56,7 +59,6 @@ public class MainUI extends javax.swing.JFrame {
         txtSearchFile.setEnabled(true);
 
         setUserDetails();
-
         // This works
         new Thread(new Runnable() {
 
@@ -64,6 +66,7 @@ public class MainUI extends javax.swing.JFrame {
             public void run() {
                 while (true) {
                     updateLog();
+                    updateRoutingTable();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -144,6 +147,10 @@ public class MainUI extends javax.swing.JFrame {
         txtMyIP.setText(nodeOpsWS.getNode().getCredential().getIp());
         txtMyPort.setText(String.valueOf(nodeOpsWS.getNode().getCredential().getPort()));
         txtUsername.setText(nodeOpsWS.getNode().getCredential().getUsername());
+
+        for (String newLog : nodeOpsWS.getNode().getFileList()) {
+            ((DefaultListModel) lstMyFiles.getModel()).addElement(newLog);
+        }
     }
 
     /**
@@ -893,8 +900,18 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        btnSearch.setEnabled(false);
+        btnSearch.setName("SEARCHING");
+        SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), txtSearchFile.getText().trim(), 0);
+        List<String> searchResult = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
+        if (!searchResult.isEmpty()) {
+            System.out.println("File is locally available!");
+        } else {
+            nodeOpsWS.triggerSearchRequest(searchRequest);
+        }
 
+        btnSearch.setEnabled(true);
+        btnSearch.setName("Search");
     }
 
     private void advRegisterActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1039,6 +1056,17 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JTextField txtUsername;
     // End of variables declaration
 
+    public void updateRoutingTable(){
+        DefaultTableModel dtm = (DefaultTableModel) tblRoutingTable.getModel();
+        List<Credential> routingTable = nodeOpsWS.getNode().getRoutingTable();
+        //Remove rows one by one from the end of the table
+        for (int i = dtm.getRowCount() - 1; i >= 0; i--) {
+            dtm.removeRow(i);
+        }
+        for (Credential routingTableRecord : routingTable) {
+            dtm.addRow(new Object[] { routingTableRecord.getIp(), routingTableRecord.getPort(), routingTableRecord.getUsername()});
+        }
+    }
 
     public void updateLog() {
         if (nodeOpsWS.isLogFlag()) {
