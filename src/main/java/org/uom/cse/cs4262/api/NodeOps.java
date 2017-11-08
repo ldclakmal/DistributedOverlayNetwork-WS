@@ -34,7 +34,7 @@ public interface NodeOps {
 
 //    void leaveOk(Credential senderCredential);
 
-    void search(SearchRequest searchRequest, Credential sendCredential);
+    boolean search(SearchRequest searchRequest, Credential sendCredential);
 
     void searchOk(SearchResponse searchResponse);
 

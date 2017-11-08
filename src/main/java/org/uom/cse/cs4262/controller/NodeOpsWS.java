@@ -224,14 +224,16 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     // done
     @Override
-    public void search(SearchRequest searchRequest, Credential sendCredentials) {
+    public boolean search(SearchRequest searchRequest, Credential sendCredentials) {
         String msg = searchRequest.getMessageAsString(Constant.Command.SEARCH);
         logMe(msg);
         String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         logMe(uri);
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
-            logMe(result);
+            if (result == "202"){
+                return true;
+            }
         } catch (ResourceAccessException exception) {
             //connection refused to the api end point
             if (node.getRoutingTable().contains(sendCredentials)) {
@@ -240,6 +242,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
             }
             //Todo: Remove this neighbour from stat table
         }
+        return false;
     }
 
     // done
@@ -434,7 +437,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         //TODO: Wait and see for stat members rather flooding whole routing table
         // Send search request to routing table members
         for (Credential credential : node.getRoutingTable()) {
-            search(searchRequest, credential);
+            if (search(searchRequest, credential)){ break;}
             logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
         }
     }
@@ -475,7 +478,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 // Send search request to routing table members
                 for (Credential credential : node.getRoutingTable()) {
                     node.incForwardedQueryCount();
-                    search(searchRequest, credential);
+                    if (search(searchRequest, credential)){ break;}
                     logMe("Send SER request message to " + credential.getIp() + " : " + credential.getPort() + "\n");
                 }
             } else {
