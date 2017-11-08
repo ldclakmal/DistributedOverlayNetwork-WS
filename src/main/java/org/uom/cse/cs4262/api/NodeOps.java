@@ -54,7 +54,7 @@ public interface NodeOps {
 
     void passSearchRequest(SearchRequest searchRequest);
 
-    void printRoutingTable(List<Credential> routingTable);
+//    void printRoutingTable(List<Credential> routingTable);
 
     void removeFromStatTable(Credential credential);
 
