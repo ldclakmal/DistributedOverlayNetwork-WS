@@ -33,7 +33,9 @@ $ mvn clean install
 #### Example
 
 ```
-$ java -jar node.jar -b 127.0.0.1 -i 127.0.0.1 -p 44499 -u node1
+$ java -jar node.jar -b 127.0.0.1 -i 127.0.0.1 -p 44411 -u node1
+$ java -jar node.jar -b 127.0.0.1 -i 127.0.0.1 -p 44422 -u node2
+$ java -jar node.jar -b 127.0.0.1 -i 127.0.0.1 -p 44433 -u node3
 ```
 
 ### Notes
