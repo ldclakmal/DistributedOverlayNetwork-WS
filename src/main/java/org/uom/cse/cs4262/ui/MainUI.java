@@ -189,7 +189,7 @@ public class MainUI extends javax.swing.JFrame {
                     System.out.println("update performance measurements");
                     updatePerformanceMeasurements();
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -1120,10 +1120,10 @@ public class MainUI extends javax.swing.JFrame {
     public void updateSearchTable() {
         HashMap<String, ArrayList<String>> searchResults = nodeOpsWS.getNode().getDisplayTable();
         DefaultTableModel tableModel = (DefaultTableModel) tblRoutingTable.getModel();
-        tableModel.setRowCount(0);
-        for (String key : searchResults.keySet()) {
-            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
-        }
+//        tableModel.setRowCount(0);
+//        for (String key : searchResults.keySet()) {
+//            tableModel.addRow(new Object[]{key, String.join(",", searchResults.get(key))});
+//        }
     }
 
 }
