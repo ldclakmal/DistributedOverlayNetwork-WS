@@ -1057,7 +1057,7 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
-        btnSearch.setEnabled(false);
+
         btnSearch.setName("SEARCHING");
         String query = txtSearchFile.getText().trim();
         nodeOpsWS.logMe("Started searching for \"" + query + "\"...");
@@ -1077,7 +1077,6 @@ public class MainUI extends javax.swing.JFrame {
             updateSearchTable();
         }
         txtSearchFile.setText("");
-        btnSearch.setEnabled(true);
         btnSearch.setName("Search");
     }
 
