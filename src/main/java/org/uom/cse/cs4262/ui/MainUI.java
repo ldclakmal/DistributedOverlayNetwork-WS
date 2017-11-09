@@ -232,6 +232,20 @@ public class MainUI extends javax.swing.JFrame {
                 tblLog.changeSelection(lastIndex, 0, false, false);
             }
         });
+
+        tblSearchResults.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int lastIndex = tblSearchResults.getRowCount() - 1;
+                tblSearchResults.changeSelection(lastIndex, 0, false, false);
+            }
+        });
+
+        tblStatTable.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int lastIndex = tblStatTable.getRowCount() - 1;
+                tblStatTable.changeSelection(lastIndex, 0, false, false);
+            }
+        });
     }
 
     private void initializeRoutingTable() {
@@ -1069,7 +1083,7 @@ public class MainUI extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
         String query = txtSearchFile.getText().trim();
-        if (query.isEmpty()) {
+        if (!query.isEmpty()) {
             nodeOpsWS.logMe("Started searching for \"" + query + "\"...");
             SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), query, 0);
             List<String> mySearchResults = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
@@ -1091,7 +1105,7 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     private void advRegisterActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        nodeOpsWS.register();
     }
 
     private void txtMyIPActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1099,13 +1113,13 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     private void btnUnregsiterActionPerformed(java.awt.event.ActionEvent evt) {
-        btnUnregsiter.setEnabled(false);
+//        btnUnregsiter.setEnabled(false);
         try {
             nodeOpsWS.unRegister();
             JOptionPane.showMessageDialog(this, "Unregistered!");
         } catch (Exception e1) {
             JOptionPane.showMessageDialog(this, "Unregister failed: " + e1.getMessage());
-            btnUnregsiter.setEnabled(true);
+//            btnUnregsiter.setEnabled(true);
             e1.printStackTrace();
         }
     }
@@ -1116,12 +1130,12 @@ public class MainUI extends javax.swing.JFrame {
 
     private void btnLeaveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            btnLeave.setEnabled(false);
+//            btnLeave.setEnabled(false);
             nodeOpsWS.leave();
             JOptionPane.showMessageDialog(this, "Leave Successful!");
         } catch (Exception e1) {
             JOptionPane.showMessageDialog(this, "Leave failed: " + e1.getMessage());
-            btnLeave.setEnabled(true);
+//            btnLeave.setEnabled(true);
             e1.printStackTrace();
         }
     }
