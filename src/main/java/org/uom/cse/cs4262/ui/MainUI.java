@@ -1069,7 +1069,7 @@ public class MainUI extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
         String query = txtSearchFile.getText().trim();
-        if (query.isEmpty()) {
+        if (!query.isEmpty()) {
             nodeOpsWS.logMe("Started searching for \"" + query + "\"...");
             SearchRequest searchRequest = new SearchRequest(++sequenceNo, nodeOpsWS.getNode().getCredential(), query, 0);
             List<String> mySearchResults = nodeOpsWS.checkFilesInFileList(searchRequest.getFileName(), nodeOpsWS.getNode().getFileList());
