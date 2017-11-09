@@ -135,6 +135,8 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 logMe(neighbourCredential.getIp() + "node is not available. Removed it from routing table.");
             }
             //Todo: Remove this neighbour from stat table
+        } catch (HttpServerErrorException exception){
+            //
         }
         if (result.equals(Constant.Command.JOINOK)) {
             node.incReceivedQueryCount();
@@ -207,7 +209,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
         String uri = Constant.HTTP + sendCredentials.getIp() + ":" + sendCredentials.getPort() + Constant.UrlPattern.SEARCH;
         try {
             String result = restTemplate.postForObject(uri, new Gson().toJson(searchRequest), String.class);
-            if (result == "202") {
+            if (result.equals("202")) {
                 return true;
             }
             logMe("Sent SEARCH for \"" + searchRequest.getFileName() + "\" to " + sendCredentials.getIp() + ":" + sendCredentials.getPort() + " at " + getCurrentTime());
@@ -218,6 +220,8 @@ public class NodeOpsWS implements NodeOps, Runnable {
                 logMe(sendCredentials.getIp() + "node is not available and removed from routing table.");
             }
             //Todo: Remove this neighbour from stat table
+        } catch (HttpServerErrorException exception){
+            //
         }
         return false;
     }
@@ -243,6 +247,8 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //                logMe(searchResponse.getCredential().getIp() + "node is not available and removed from routing table.");
             }
             //Todo: Remove this neighbour from stat table
+        } catch (HttpServerErrorException exception){
+            //
         }
     }
 
@@ -413,7 +419,7 @@ public class NodeOpsWS implements NodeOps, Runnable {
 //                logMe("Search request from" + searchRequest.getCredential().getIp() + ":" + searchRequest.getCredential().getPort() + "is blocked by hop TTL\n");
             }
         }
-        Thread.currentThread().interrupt();
+//        Thread.currentThread().interrupt();
     }
 
     @Override
