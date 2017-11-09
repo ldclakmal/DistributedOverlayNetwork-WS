@@ -1,6 +1,7 @@
 package org.uom.cse.cs4262.controller;
 
 import com.google.gson.Gson;
+import com.sun.deploy.util.StringUtils;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +20,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -332,8 +334,17 @@ public class NodeOpsWS implements NodeOps, Runnable {
 
     @Override
     public List<String> checkFilesInFileList(String fileName, List<String> fileList) {
-        Pattern pattern = Pattern.compile(fileName, Pattern.CASE_INSENSITIVE + Pattern.LITERAL);
-        return fileList.stream().filter(pattern.asPredicate()).collect(Collectors.toList());
+        List<String> result = new ArrayList<>();
+        for (String file : fileList){
+            String temp = file.toLowerCase();
+            List<String> tokens = new ArrayList<>();
+            tokens.add(fileName.toLowerCase());
+            Matcher matcher= Pattern.compile("\\b(" + StringUtils.join(tokens, "|") + ")\\b").matcher(temp);
+            if (matcher.find()){
+                result.add(file);
+            }
+        }
+        return result;
     }
 
     @Override
